@@ -47,7 +47,7 @@ public class PlayerMovementControl : MonoBehaviour {
             controller.transform.Rotate(Vector3.up, rotateDegree);
 
             Vector3 mVector = getVectorToGo();
-            controller.Move(new Vector3(mVector.x, 0, mVector.z) * getSpeedFactor());
+            controller.Move(new Vector3(mVector.x, -1.08f, mVector.z) * getSpeedFactor());
             faceDirection = direction;
         }
 		

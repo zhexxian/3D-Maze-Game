@@ -63,8 +63,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\SampleScene\Scripts\PlayManager.cs" />
+    <Compile Include="Assets\Scripts\AiScript.cs" />
     <Compile Include="Assets\Scripts\CameraMovementControl.cs" />
+    <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementControl.cs" />
+    <Compile Include="Assets\Scripts\SimpleMovementScript.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\SampleScene\Shaders\DiffuseReflectiveShader.shader" />
+    <None Include="Assets\SampleScene\Shaders\ReflectiveDiffuseSpec.shader" />
+    <None Include="Assets\SampleScene\Shaders\ReflectiveDiffuseSpecTransp.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
