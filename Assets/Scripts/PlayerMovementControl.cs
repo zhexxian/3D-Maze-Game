@@ -75,8 +75,21 @@ public class PlayerMovementControl : MonoBehaviour {
             prevMovingState = movingState;
             updateAnimation();
         }
-        
-
-
     }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        // If the tag of the colliding object is allowed to teleport
+        //if (TagList.Contains(string.Format("|{0}|", other.tag)))
+        //if (other.tag == "MainPlayer")
+        //{
+        Vector3 teleportPosition = new Vector3(-1f, 0, -1f);
+        // Update other objects position and rotation
+        //other.transform.position = Destination.transform.position;
+        //other.transform.rotation = Destination.transform.rotation;
+        transform.transform.Translate(teleportPosition);
+        //}
+    }
+
+
 }
