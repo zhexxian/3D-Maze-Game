@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{15373397-2E81-86CF-C0DA-5990B349C1EC}</ProjectGuid>
+    <ProjectGuid>{FF021E39-F83E-D2AF-B610-9E2507331569}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -45,7 +45,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\SampleScene\Scripts\PlayManager.cs" />
+     <Compile Include="Assets\Scripts\AiScript.cs" />
+     <Compile Include="Assets\Scripts\CameraMovementControl.cs" />
+     <Compile Include="Assets\Scripts\CreateMaze.cs" />
+     <Compile Include="Assets\Scripts\LoadGameScene.cs" />
+     <Compile Include="Assets\Scripts\LoadMapScene.cs" />
+     <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerMovementControl.cs" />
+     <Compile Include="Assets\Scripts\SimpleMovementScript.cs" />
+     <Compile Include="Assets\teleportScript.cs" />
+     <None Include="Assets\SampleScene\Shaders\ReflectiveDiffuseSpecTransp.shader" />
+     <None Include="Assets\SampleScene\Shaders\DiffuseReflectiveShader.shader" />
+     <None Include="Assets\SampleScene\Shaders\ReflectiveDiffuseSpec.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/UNITY/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
