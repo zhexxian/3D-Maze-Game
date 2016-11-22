@@ -49,8 +49,11 @@
      <Compile Include="Assets\Scripts\AiScript.cs" />
      <Compile Include="Assets\Scripts\CameraMovementControl.cs" />
      <Compile Include="Assets\Scripts\CreateMaze.cs" />
+     <Compile Include="Assets\Scripts\CreateMazeMap.cs" />
      <Compile Include="Assets\Scripts\LoadGameScene.cs" />
      <Compile Include="Assets\Scripts\LoadMapScene.cs" />
+     <Compile Include="Assets\Scripts\MazeDatabase.cs" />
+     <Compile Include="Assets\Scripts\MazeGenerator.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerMovementControl.cs" />
      <Compile Include="Assets\Scripts\SimpleMovementScript.cs" />
