@@ -37,13 +37,24 @@ public class PlayerMovementControl : MonoBehaviour {
     void Start () {
 		controller = GetComponent<CharacterController>();
         mAnimator = GetComponent<Animator>();
+        locatePlayer();
     }
 
-    void updateAnimation1(){
-        mAnimator.SetFloat("Speed",speedFactor);
-        mAnimator.SetBool("Walking", (movingState == 1 || movingState == 2));
-        if(Input.GetKeyDown("q"))mAnimator.Play("Walk",-1,0f);
-        if (Input.GetKeyDown("e")) mAnimator.Play("Run", -1, 0f);
+    void locatePlayer(){
+        bool isFindStartLocation = false;
+        for (int y = 0; y < MazeDatabase.GetMaze[1].GetLength(0); y++)
+        {
+            for (int x = 0; x < MazeDatabase.GetMaze[1].GetLength(1); x++)
+            {
+                if (MazeDatabase.GetMaze[1][y, x] == "S")
+                {
+                    transform.position = new Vector3(y * 30 + 10, 0.0f, x);
+                    isFindStartLocation = true;
+                }
+            }
+        }
+
+
     }
 
     void updateAnimation() {
@@ -77,19 +88,6 @@ public class PlayerMovementControl : MonoBehaviour {
         }
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        // If the tag of the colliding object is allowed to teleport
-        //if (TagList.Contains(string.Format("|{0}|", other.tag)))
-        //if (other.tag == "MainPlayer")
-        //{
-        Vector3 teleportPosition = new Vector3(-1f, 0, -1f);
-        // Update other objects position and rotation
-        //other.transform.position = Destination.transform.position;
-        //other.transform.rotation = Destination.transform.rotation;
-        transform.transform.Translate(teleportPosition);
-        //}
-    }
 
 
 }
