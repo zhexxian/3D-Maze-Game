@@ -17,7 +17,7 @@ public class CreateMazeMap : MonoBehaviour
         GameObject[][,] cube = new GameObject[7][,];
 		//GameObject mapcube = new GameObject();
         BoxCollider[][,] cubeCollider = new BoxCollider[7][,];
-
+         
 		//map cube orientation
 		//Top: 3
 		//Bottom: 1

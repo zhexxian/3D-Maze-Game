@@ -17,6 +17,7 @@ public class AiScript : MonoBehaviour {
     private int prevMovingState = 0;
     private Vector2 nextTargetKoordinat;
 
+    private bool readMap = false;
     public float getSpeedFactor()
     {
         return (speedFactor * Time.deltaTime);
@@ -24,7 +25,7 @@ public class AiScript : MonoBehaviour {
 
     public void nextCordinate() {
         // later find available coordinate path 
-        nextTargetKoordinat = new Vector2(Random.Range(-5f,5f), Random.Range(-5f, 5f));
+        nextTargetKoordinat = new Vector2(Random.Range(30f,40f), Random.Range(-5f, 5f));
     }
 
     public int getDiretionToGo()
@@ -73,40 +74,72 @@ public class AiScript : MonoBehaviour {
         }
     }
 
+    void placeAIInStartPosition()
+    {
+        int xAI = 0;
+        int yAI = 0;
+        for (int y = 0; y < MazeDatabase.GetMaze[1].GetLength(0); y++)
+        {
+            for (int x = 0; x < MazeDatabase.GetMaze[1].GetLength(1); x++)
+            {
+                if (MazeDatabase.GetMaze[1][y, x] == "S")
+                {
+                    xAI = x;
+                    yAI = y;
+                }
+
+            }
+        }
+        transform.position = new Vector3(xAI + 30, 0, yAI);
+    }
+
     // Update is called once per frame
     void Update()
     {
-
-        if (isSeenPlayer())
+        if (!readMap)
         {
-            // engage player using A* path finding
+            if (MazeDatabase.GetMaze[1] != null)
+            {
+                readMap = true;
+                placeAIInStartPosition();
+            }
         }
         else
         {
-            stateTime += Time.deltaTime;
-            if (stateTime >= 3.0f && movingState == 0)
-            {
-                // Start patroling
-                nextCordinate();
-                movingState = 1;
-                stateTime = 0.0f;
-                updateAnimation();
-            }
-            else if (stateTime >= 5.0f && (movingState == 1 || movingState == 2)) {
-                // Start to iddle
-                movingState = 0;
-                speedFactor = walkSpeedFactor;
-                stateTime = 0.0f;
-                updateAnimation();
-            }
 
-            if (movingState == 1) {
-                // Patroling random available path
-                int direction = getDiretionToGo();
-                int rotateDegree = (faceDirection - direction) * 90;
-                controller.transform.Rotate(Vector3.up, rotateDegree);
-                transform.Translate(0.0f, 0, getSpeedFactor());
-                faceDirection = direction;
+            if (isSeenPlayer())
+            {
+                // engage player using A* path finding
+            }
+            else
+            {
+                stateTime += Time.deltaTime;
+                if (stateTime >= 3.0f && movingState == 0)
+                {
+                    // Start patroling
+                    nextCordinate();
+                    movingState = 1;
+                    stateTime = 0.0f;
+                    updateAnimation();
+                }
+                else if (stateTime >= 5.0f && (movingState == 1 || movingState == 2))
+                {
+                    // Start to iddle
+                    movingState = 0;
+                    speedFactor = walkSpeedFactor;
+                    stateTime = 0.0f;
+                    updateAnimation();
+                }
+
+                if (movingState == 1)
+                {
+                    // Patroling random available path
+                    int direction = getDiretionToGo();
+                    int rotateDegree = (faceDirection - direction) * 90;
+                    controller.transform.Rotate(Vector3.up, rotateDegree);
+                    transform.Translate(0.0f, 0, getSpeedFactor());
+                    faceDirection = direction;
+                }
             }
         }
         

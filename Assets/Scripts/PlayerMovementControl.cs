@@ -7,6 +7,7 @@ public class PlayerMovementControl : MonoBehaviour {
     public float walkSpeedFactor = 2.0f;
     public float runSpeedFactor = 6.0f;
     private float speedFactor = 0.0f;
+    private bool readMap = false;
     
 
     public Animator mAnimator;
@@ -65,27 +66,57 @@ public class PlayerMovementControl : MonoBehaviour {
             case 2: mAnimator.Play("Run", -1, 0f); break;
         }    
     }
+    void placePlayerInStartPosition()
+    {
+        bool isFindStartPosition = false;
+        for (int y = 0; y < MazeDatabase.GetMaze[1].GetLength(0); y++)
+        {
+            for (int x = 0; x < MazeDatabase.GetMaze[1].GetLength(1); x++)
+            {
+                if (MazeDatabase.GetMaze[1][y, x] == "S")
+                {
+                    transform.position = new Vector3(x+30, 0.0f, y);
+                    isFindStartPosition = true;
+                }
+                    if (isFindStartPosition) break;
 
+                }
+            if (isFindStartPosition) break;
+        }
+    }
     // Update is called once per frame
     void Update () {
-        if (isMovementControlKey())
+        if (!readMap)
         {
-            speedFactor = Input.GetKey("space") ? runSpeedFactor : walkSpeedFactor;
-            movingState = Input.GetKey("space") ? 2 : 1;
-            int direction = getDiretionToGo();
-            int rotateDegree = (faceDirection - direction) * 90;
-            controller.transform.Rotate(Vector3.up, rotateDegree);
-            transform.Translate(0.0f, 0, getSpeedFactor());
-            faceDirection = direction;
+            if (MazeDatabase.GetMaze[1] != null)
+            {
+                readMap = true;
+                placePlayerInStartPosition();
+            }
         }
         else {
-            movingState = 0;
-            speedFactor = 0f;
+            if (isMovementControlKey())
+            {
+                speedFactor = Input.GetKey("space") ? runSpeedFactor : walkSpeedFactor;
+                movingState = Input.GetKey("space") ? 2 : 1;
+                int direction = getDiretionToGo();
+                int rotateDegree = (faceDirection - direction) * 90;
+                controller.transform.Rotate(Vector3.up, rotateDegree);
+                transform.Translate(0.0f, 0, getSpeedFactor());
+                faceDirection = direction;
+            }
+            else
+            {
+                movingState = 0;
+                speedFactor = 0f;
+            }
+            if (!(prevMovingState == movingState))
+            {
+                prevMovingState = movingState;
+                updateAnimation();
+            }
         }
-        if (!(prevMovingState == movingState)) {
-            prevMovingState = movingState;
-            updateAnimation();
-        }
+       
     }
 
 

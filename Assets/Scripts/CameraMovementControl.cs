@@ -7,6 +7,7 @@ public class CameraMovementControl : MonoBehaviour {
     public float walkSpeedFactor = 2.0f;
     public float runSpeedFactor = 6.0f;
     private float speedFactor = 0.0f;
+    private bool readMap = false;
 
     public float getSpeedFactor()
     {
@@ -28,6 +29,25 @@ public class CameraMovementControl : MonoBehaviour {
         return -Camera.main.transform.right;
     }
 
+    void placeCameraInStartPosition()
+    {
+        bool isFindStartPosition = false;
+        for (int y = 0; y < MazeDatabase.GetMaze[1].GetLength(0); y++)
+        {
+            for (int x = 0; x < MazeDatabase.GetMaze[1].GetLength(1); x++)
+            {
+                if (MazeDatabase.GetMaze[1][y, x] == "S")
+                {
+                    transform.position = new Vector3(x + 30, 4, y-4);
+                    isFindStartPosition = true;
+                }
+                if (isFindStartPosition) break;
+
+            }
+            if (isFindStartPosition) break;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         controller = GetComponent<CharacterController>();
@@ -35,10 +55,22 @@ public class CameraMovementControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (isMovementControlKey()){
-            speedFactor = Input.GetKey("space") ? runSpeedFactor : walkSpeedFactor;
-            Vector3 mVector = getVectorToGo();
-            controller.Move(new Vector3(mVector.x, 0, mVector.z) * getSpeedFactor());
+        if (!readMap)
+        {
+            if (MazeDatabase.GetMaze[1] != null)
+            {
+                readMap = true;
+                placeCameraInStartPosition();
+            }
+        }
+        else
+        {
+            if (isMovementControlKey())
+            {
+                speedFactor = Input.GetKey("space") ? runSpeedFactor : walkSpeedFactor;
+                Vector3 mVector = getVectorToGo();
+                controller.Move(new Vector3(mVector.x, 0, mVector.z) * getSpeedFactor());
+            }
         }
     }
 }
