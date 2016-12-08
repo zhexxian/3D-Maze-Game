@@ -38,7 +38,7 @@ public class CameraMovementControl : MonoBehaviour {
             {
                 if (MazeDatabase.GetMaze[1][y, x] == "S")
                 {
-                    transform.position = new Vector3(x + 30, 4, y-4);
+                    transform.position = new Vector3(x + 30, 2, y-2 );
                     isFindStartPosition = true;
                 }
                 if (isFindStartPosition) break;
