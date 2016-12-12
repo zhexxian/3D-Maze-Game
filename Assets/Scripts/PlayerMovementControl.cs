@@ -8,6 +8,7 @@ public class PlayerMovementControl : MonoBehaviour {
     public float runSpeedFactor = 6.0f;
     private float speedFactor = 0.0f;
     private bool readMap = false;
+    private int indexMap = 1; // 1-6 
     
 
     public Animator mAnimator;
@@ -43,11 +44,11 @@ public class PlayerMovementControl : MonoBehaviour {
 
     void locatePlayer(){
         bool isFindStartLocation = false;
-        for (int y = 0; y < MazeDatabase.GetMaze[1].GetLength(0); y++)
+        for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++)
         {
-            for (int x = 0; x < MazeDatabase.GetMaze[1].GetLength(1); x++)
+            for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++)
             {
-                if (MazeDatabase.GetMaze[1][y, x] == "S")
+                if (MazeDatabase.GetMaze[indexMap][y, x] == "S")
                 {
                     transform.position = new Vector3(y * 30 + 10, 0.0f, x);
                     isFindStartLocation = true;

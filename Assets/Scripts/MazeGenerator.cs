@@ -7,10 +7,10 @@ public class MazeGenerator
 	static int mazewidth = 0;
 	static int mazeheight = 0;
 	static string[,] maze;
-	static string MAZEWALL = "#";
-	static string MAZEPATH = " ";
-	static string MAZESTART = "S";
-	static string MAZEFINISH = "F";
+	public static string MAZEWALL = "#";
+    public static string MAZEPATH = " ";
+    public static string MAZESTART = "S";
+    public static string MAZEFINISH = "F";
 	static double FINISHDISTANCE = 0.4;
 	static double COMPLEXITY = 0.2;
 	static int GAP = 3;
