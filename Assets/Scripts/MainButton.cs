@@ -7,6 +7,7 @@ public class MainButton : MonoBehaviour
     // Use this for initialization
     public void Play_button_click()
     {
+        MazeDatabase.GenerateMaze(10);
         Application.LoadLevel("game-scene");
     }
 
