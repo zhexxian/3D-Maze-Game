@@ -4,9 +4,28 @@ using System.Collections;
 
 public class GlobalVariable
 {
-
     private static Vector3 m_playerPosition;
+    private static int[] _maxGemNumber;
+    private static int _currGemNumber;
+    private static int _levelMap;
     
+    public static int[] MaxGemNumber {
+        get { return _maxGemNumber; }
+        set { _maxGemNumber = value; }
+    }
+
+    public static int CurrGemNumber
+    {
+        get { return _currGemNumber; }
+        set { _currGemNumber = value; }
+    }
+
+    public static int LevelMap
+    {
+        get { return _levelMap; }
+        set { _levelMap = value; }
+    }
+
     public static Vector3 PlayerPosition
     {
         get { return m_playerPosition; }

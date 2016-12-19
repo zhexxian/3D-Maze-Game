@@ -6,16 +6,17 @@ public class CreateMaze : MonoBehaviour
 {
     public Material groundMaterial;
     public Material wallMaterial;
+    public Material MaterialFloor;
+    public Material MaterialGem;
     public GameObject PrefabGem;
     public GameObject PrefabTeleport;
-    public Material MaterialFloor;
     public GameObject PrefabWall;
 
     // Use this for initialization
     void Start()
     {
         //initialize map
-
+        int[] gemNumber = new int[7];
 
         const int mazesize = 10;
         //MazeDatabase.GenerateMaze (mazesize);
@@ -42,6 +43,7 @@ public class CreateMaze : MonoBehaviour
 
         for (int a = 1; a <= 6; a++)
         {
+            gemNumber[a] = 0; 
             plane[a] = GameObject.CreatePrimitive(PrimitiveType.Cube);
             plane[a].transform.position = new Vector3(a * MazeDatabase.GetMaze[a].GetLength(0) + 10, 0, 10);
             //maze[a].GetLength(0) --> horizontal; (1) --> vertical
@@ -85,7 +87,10 @@ public class CreateMaze : MonoBehaviour
                         if (MazeDatabase.GetMaze[a][y, x] == "G")
                         {
                             GameObject go = (GameObject)Instantiate(PrefabGem);
+                            //go.GetComponent<Renderer>().material = MaterialGem;
                             go.transform.localPosition = new Vector3(x + a * MazeDatabase.GetMaze[a].GetLength(0), 0.5f, y);
+                            //go.transform.localScale = new Vector3(10, 10, 10);
+                            gemNumber[a]++;
                         }
                         if (MazeDatabase.GetMaze[a][y, x] == "F")
                         {
@@ -93,11 +98,11 @@ public class CreateMaze : MonoBehaviour
                         }
                         
                     }
-
+                    ss
                 }
             }
         }
-
+        GlobalVariable.MaxGemNumber = gemNumber;
         //create maze  teleport spot
         for (int n = 0; n < MazeDatabase.GetMaze[1].GetLength(0); n++)
         {

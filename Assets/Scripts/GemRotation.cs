@@ -12,4 +12,13 @@ public class GemRotation : MonoBehaviour {
 	void Update () {
         gameObject.transform.Rotate(2, -2, 2);
 	}
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.name == "MainPlayer")
+        {
+            Destroy(gameObject);
+            GlobalVariable.CurrGemNumber += 1;
+        }
+    }
 }
