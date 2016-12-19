@@ -6,6 +6,7 @@ public class PlayerMovementControl : MonoBehaviour {
     // Public for GUI parameter input
     public float walkSpeedFactor = 2.0f;
     public float runSpeedFactor = 6.0f;
+    public float rotationSpeed = 2.0f;
     private float speedFactor = 0.0f;
     private bool readMap = false;
     private int indexMap = 1; // 1-6 
@@ -22,10 +23,12 @@ public class PlayerMovementControl : MonoBehaviour {
 		return (speedFactor*Time.deltaTime);
 	}
 
-    public bool isMovementControlKey() {
-        bool controlKey = Input.GetKey("w") || Input.GetKey("up") || Input.GetKey("a") || Input.GetKey("left");
-        controlKey = controlKey || Input.GetKey("s") || Input.GetKey("down") || Input.GetKey("d") || Input.GetKey("right");
-        return controlKey;
+    public bool isMovementControlKey(int state) {
+        // state = 0 -> moving ( W / S )
+        // state = 1 -> Facing ( A / D )
+        bool controlKeyMoving = Input.GetKey("w") || Input.GetKey("up") || Input.GetKey("s") || Input.GetKey("down");
+        bool controlKeyFacing = Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
+        return state==0? controlKeyMoving : controlKeyFacing;
     }
 
     public int getDiretionToGo() {
@@ -37,7 +40,7 @@ public class PlayerMovementControl : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		controller = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
         mAnimator = GetComponent<Animator>();
         locatePlayer();
     }
@@ -96,15 +99,30 @@ public class PlayerMovementControl : MonoBehaviour {
             }
         }
         else {
-            if (isMovementControlKey())
+            
+            if (isMovementControlKey(0) || isMovementControlKey(1))
             {
-                speedFactor = Input.GetKey("space") ? runSpeedFactor : walkSpeedFactor;
-                movingState = Input.GetKey("space") ? 2 : 1;
-                int direction = getDiretionToGo();
-                int rotateDegree = (faceDirection - direction) * 90;
-                controller.transform.Rotate(Vector3.up, rotateDegree);
-                transform.Translate(0.0f, 0, getSpeedFactor());
-                faceDirection = direction;
+
+                movingState = 0;
+                if (isMovementControlKey(1)) {
+                    float deltaY = rotationSpeed;
+                    if (Input.GetKey("a") || Input.GetKey("left")) deltaY *= -1;
+                    controller.transform.Rotate(Vector3.up, deltaY);
+                }
+                if (isMovementControlKey(0)) {
+                    movingState = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? 2 : 1;
+                    speedFactor = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? runSpeedFactor : walkSpeedFactor;
+                    var z = Input.GetAxis("Vertical") * getSpeedFactor();
+                    transform.Translate(0, 0, z);
+                }
+                
+                
+                //int direction = getDiretionToGo();
+                //int rotateDegree = (faceDirection - direction) * 90;
+                //controller.transform.Rotate(Vector3.up, rotateDegree);
+                //transform.Translate(0.0f, 0, getSpeedFactor());
+                //faceDirection = direction;
+                
             }
             else
             {
@@ -119,7 +137,5 @@ public class PlayerMovementControl : MonoBehaviour {
         }
        
     }
-
-
 
 }

@@ -4,30 +4,10 @@ using System.Collections;
 public class CameraMovementControl : MonoBehaviour {
 
     private CharacterController controller;
-    public float walkSpeedFactor = 2.0f;
-    public float runSpeedFactor = 6.0f;
-    private float speedFactor = 0.0f;
+    public GameObject target;
     private bool readMap = false;
-
-    public float getSpeedFactor()
-    {
-        return (speedFactor * Time.deltaTime);
-    }
-
-    public bool isMovementControlKey()
-    {
-        bool controlKey = Input.GetKey("w") || Input.GetKey("up") || Input.GetKey("a") || Input.GetKey("left");
-        controlKey = controlKey || Input.GetKey("s") || Input.GetKey("down") || Input.GetKey("d") || Input.GetKey("right");
-        return controlKey;
-    }
-
-    public Vector3 getVectorToGo()
-    {
-        if (Input.GetKey("s") || Input.GetKey("down")) return -Camera.main.transform.forward;
-        if (Input.GetKey("d") || Input.GetKey("right")) return Camera.main.transform.right;
-        if (Input.GetKey("w") || Input.GetKey("up")) return Camera.main.transform.forward;
-        return -Camera.main.transform.right;
-    }
+    public float damping = 1;
+    public Vector3 offset = new Vector3(0, 3, -2);
 
     void placeCameraInStartPosition()
     {
@@ -51,6 +31,7 @@ public class CameraMovementControl : MonoBehaviour {
     // Use this for initialization
     void Start () {
         controller = GetComponent<CharacterController>();
+        target = GameObject.Find("MainPlayer");
     }
 	
 	// Update is called once per frame
@@ -63,14 +44,17 @@ public class CameraMovementControl : MonoBehaviour {
                 placeCameraInStartPosition();
             }
         }
-        else
+    }
+
+    void LateUpdate()
+    {
+        if (readMap)
         {
-            if (isMovementControlKey())
-            {
-                speedFactor = Input.GetKey("space") ? runSpeedFactor : walkSpeedFactor;
-                Vector3 mVector = getVectorToGo();
-                controller.Move(new Vector3(mVector.x, 0, mVector.z) * getSpeedFactor());
-            }
+            transform.position = target.transform.position;
+            transform.eulerAngles = new Vector3(0, target.transform.eulerAngles.y, 0);
+            transform.Translate(offset);
+            transform.eulerAngles = new Vector3(35, target.transform.eulerAngles.y, 0);
         }
+        
     }
 }
