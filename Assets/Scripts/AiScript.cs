@@ -2,78 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-
-public class MapNode {
-    private int indexX;
-    private int indexY;
-    private MapNode mParent;
-    private bool availablePath;
-    private Vector2 posisition;
-    private float fValue,gValue,hValue;
-
-    public MapNode(int indexX,int indexY,int indexMap) {
-        this.indexX = indexX;
-        this.indexY = indexY;
-        this.mParent = null;
-        this.availablePath = (MazeDatabase.GetMaze[indexMap][indexX, indexY] != MazeGenerator.MAZEPATH);
-        this.posisition = new Vector2(indexX + indexMap * AiScript.widthBeetweenMap, indexY);
-        resetCost();
-    }
-    public void resetCost() {
-        this.fValue = this.gValue = this.hValue = -1.0f;
-    }
-    public void setParent(MapNode mParent) {
-        this.mParent = mParent;
-    }
-    public MapNode getParent() {
-        return mParent;
-    }
-    public bool isAvailablePath() {
-        return availablePath;
-    }
-    public Vector2 getPosition() {
-        return posisition;
-    }
-    public float getFvalue() {
-        return fValue;
-    }
-    public float getGvalue() {
-        return gValue;
-    }
-    public int getIndexX() {
-        return indexX;
-    }
-    public int getIndexY(){
-        return indexY;
-    }
-    public bool updateCost(float gValue , float hValue) {
-        bool betterValue = false;
-        if (this.gValue < 0.0) { betterValue = true; this.gValue = gValue; }
-        if (this.hValue < 0.0) { betterValue = true; this.hValue = hValue; }
-        if (betterValue)
-        {
-            fValue = gValue + hValue;
-        }
-        else {
-            if (fValue > gValue + hValue) {
-                betterValue = true;
-                this.gValue = gValue;
-                this.hValue = hValue;
-                fValue = gValue + hValue;
-            }
-        }
-        return betterValue;
-    }
-}
+using Assets.Scripts;
 
 public class AiScript : MonoBehaviour {
 
-    public static int widthBeetweenMap = 30;
+    public int monster_id;
+    public float radius = 0.5f;
 
     private MapNode[][] mapNode;
     private Animator mAnimator;
     private Animation mAnimation;
     private CharacterController controller;
+    
+
     // Public for GUI parameter input
     public float maxIdleTime        = 3.0f;
     public float seenRange          = 2.0f;
@@ -87,19 +28,33 @@ public class AiScript : MonoBehaviour {
     private int faceDirection       = 2;  // 0 - camera direction   || 1 - right direction   || 2 - forward direction   || 3 - left direction
     private int walkingNodeIndex    = 0;
 
-    private Vector2 startCoordinat;
-    private Vector2 nextTargetKoordinat;
+    private Vector2 nextTargetCoordinat;
 
-    private MapNode startMapNode;
-    private MapNode nextTargetMapNode;
-    private List<Vector2> mWalkingCoordinatePath;
-    private List<MapNode> mWalkingCoordinateNode; // open map node list
+    private MapNode startMapNode;       // Start Current Posisition of AI
+    private MapNode nextTargetMapNode;  // Goal Posisition That AI should Go
+    private List<MapNode> mWalkingCoordinateNode; // For Storing Which Node of Map that should passed
     private List<MapNode> closedListNode;
     private List<MapNode> openListNode;
 
     enum AiBehaviour{chasing,patroling,idle};
     private AiBehaviour mBehaviour;
     private bool haveReadTheMap;
+    private GameObject mainPlayer;
+
+    // Use this for initialization
+    void Start()
+    {
+        mainPlayer  = GameObject.Find("MainPlayer");
+        mBehaviour  = AiBehaviour.idle;
+        controller  = GetComponent<CharacterController>();
+        mAnimator   = GetComponent<Animator>();
+        mAnimation  = GetComponent<Animation>();
+        haveReadTheMap  = false;
+        closedListNode  = new List<MapNode>();
+        openListNode    = new List<MapNode>();
+        mAnimation.wrapMode = WrapMode.Loop;
+        mWalkingCoordinateNode = new List<MapNode>();
+    }
 
     public float getSpeedFactor()
     {
@@ -124,14 +79,14 @@ public class AiScript : MonoBehaviour {
 
     public int getDiretionToGo()
     {
-        float radius = 0.5f;
-        if (nextTargetKoordinat.x - radius > controller.transform.position.x) // go to right
+        
+        if (nextTargetCoordinat.x - radius > controller.transform.position.x) // go to right
             return 1;
-        if (nextTargetKoordinat.x + radius < controller.transform.position.x) // go to left
+        if (nextTargetCoordinat.x + radius < controller.transform.position.x) // go to left
             return 3;
-        if (nextTargetKoordinat.y - radius > controller.transform.position.z) // go to up
+        if (nextTargetCoordinat.y - radius > controller.transform.position.z) // go to up
             return 2;
-        if (nextTargetKoordinat.y + radius < controller.transform.position.z) // go to down
+        if (nextTargetCoordinat.y + radius < controller.transform.position.z) // go to down
             return 0;
 
         //movingState = 0;
@@ -141,17 +96,20 @@ public class AiScript : MonoBehaviour {
 
     public bool isSeenPlayer() {
         // if location player and ai within in xx range and yy range
+        
         setCurrentLocationAsStartNode();
-        float playerX = GameObject.Find("MainPlayer").transform.position.x;
-        float playerZ = GameObject.Find("MainPlayer").transform.position.z;
-        int indexX = (int)Math.Round((playerX - indexMap * AiScript.widthBeetweenMap), MidpointRounding.AwayFromZero);
+        float playerX = mainPlayer.transform.position.x;
+        float playerZ = mainPlayer.transform.position.z;
+        int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
         int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
-        return (indexX >= startMapNode.getIndexX() - seenRange &&
-            indexX <= startMapNode.getIndexX() + seenRange &&
-            indexY >= startMapNode.getIndexY() - seenRange &&
-            indexY <= startMapNode.getIndexY() + seenRange);
+        return false;
+        //return (indexX >= startMapNode.getIndexX() - seenRange &&
+        //    indexX <= startMapNode.getIndexX() + seenRange &&
+        //    indexY >= startMapNode.getIndexY() - seenRange &&
+        //    indexY <= startMapNode.getIndexY() + seenRange);
     }
 
+    // A* Path
     public void resetAllNodeCost() {
         for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(0); x++)
         {
@@ -186,21 +144,25 @@ public class AiScript : MonoBehaviour {
         neighbors.Clear();
         int indexX = node.getIndexX();
         int indexY = node.getIndexY();
-        if (indexX - 1 >= 0 && mapNode[indexX - 1][indexY].isAvailablePath())
+        if (indexX - 1 >= 0 )
         {
-            neighbors.Add(mapNode[indexX - 1][indexY]);
+            if (mapNode[indexX - 1][indexY].isAvailablePath())
+                neighbors.Add(mapNode[indexX - 1][indexY]);
         }
-        if (indexX + 1 <= mapNode.GetLength(1) && mapNode[indexX + 1][indexY].isAvailablePath())
+        if (indexX + 1 <= mapNode.GetLength(0))
         {
-            neighbors.Add(mapNode[indexX + 1][indexY]);
+            if(mapNode[indexX + 1][indexY].isAvailablePath())
+                neighbors.Add(mapNode[indexX + 1][indexY]);
         }
-        if (indexY - 1 >= 0 && mapNode[indexX][indexY - 1].isAvailablePath())
+        if (indexY - 1 >= 0 )
         {
-            neighbors.Add(mapNode[indexX][indexY - 1]);
+            if(mapNode[indexX][indexY - 1].isAvailablePath())
+                neighbors.Add(mapNode[indexX][indexY - 1]);
         }
-        if (indexY + 1 <= mapNode.GetLength(1) && mapNode[indexX][indexY + 1].isAvailablePath())
+        if (indexY + 1 <= mapNode.GetLength(0))
         {
-            neighbors.Add(mapNode[indexX][indexY + 1]);
+            if (mapNode[indexX][indexY + 1].isAvailablePath())
+                neighbors.Add(mapNode[indexX][indexY + 1]);
         }
 
         return neighbors;
@@ -230,7 +192,11 @@ public class AiScript : MonoBehaviour {
             currentNode = getNodeFromOpenList();
             closedListNode.Add(currentNode);
 
-            if (currentNode == nextTargetMapNode) return;
+            if (currentNode == nextTargetMapNode)
+            {
+                BuildPathNode(nextTargetMapNode);
+                return;
+            }
             currentNodeNeightbors = findNodesNeighbor(currentNode);
             for (int a = 0; a < currentNodeNeightbors.Count; a++)
             {
@@ -247,27 +213,35 @@ public class AiScript : MonoBehaviour {
                 }
             }
         }
-
-
     }
 
     public void moving() {
         if (mWalkingCoordinateNode.Count > 0)
         {
-            //Real targetX = mPathPoints[mCurrentPathPointIndex+1].x;
-            //Real targetZ = mPathPoints[mCurrentPathPointIndex+1].z;
-            //Real rboX = mRobotNode->getPosition().x;
-            //Real rboZ = mRobotNode->getPosition().z;
-            //if(rboX == targetX && rboZ == targetZ){
-            //robotIsMoving = false;
-            //}
-            //else{
-            //Real movementX = 0.1;
-            //Real movementZ = 0.1;
-            //if(rboX > targetX ) movementX = movementX * -1;
-            //if(rboZ > targetZ ) movementZ = movementZ * -1;
-            //rboX = rboX + movementX;
-            //rboZ = rboZ + movementZ;
+            if (walkingNodeIndex == mWalkingCoordinateNode.Count)
+            {
+
+            }
+            else if(walkingNodeIndex < mWalkingCoordinateNode.Count) {
+                nextTargetCoordinat = mWalkingCoordinateNode[walkingNodeIndex + 1].getPosition();
+                bool arrive = nextTargetCoordinat.x - radius < controller.transform.position.x && nextTargetCoordinat.x + radius > controller.transform.position.x;
+                arrive = arrive && nextTargetCoordinat.y - radius < controller.transform.position.z && nextTargetCoordinat.y + radius > controller.transform.position.z;
+                if (!arrive)
+                {
+                    int direction = getDiretionToGo();
+                    int rotateDegree = (faceDirection - direction) * 90;
+                    controller.transform.Rotate(Vector3.up, rotateDegree);
+                    transform.Translate(0.0f, 0, getSpeedFactor());
+                    faceDirection = direction;
+                }
+                else {
+                    walkingNodeIndex++;
+                    setCurrentLocationAsStartNode();
+                }
+
+                
+
+            }
 
         }
         //simple moving
@@ -282,7 +256,7 @@ public class AiScript : MonoBehaviour {
     }
     
     public void setCurrentLocationAsStartNode() {
-        int indexX = (int)Math.Round((transform.position.x- indexMap * AiScript.widthBeetweenMap), MidpointRounding.AwayFromZero);
+        int indexX = (int)Math.Round((transform.position.x- indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
         int indexY = (int)Math.Round(transform.position.z, MidpointRounding.AwayFromZero);
         startMapNode = mapNode[indexX][indexY];
     }
@@ -290,25 +264,9 @@ public class AiScript : MonoBehaviour {
     public void setMainPlayerLocationAsTargetNode() {
         float playerX = GameObject.Find("MainPlayer").transform.position.x;
         float playerZ = GameObject.Find("MainPlayer").transform.position.z;
-        int indexX = (int)Math.Round((playerX - indexMap * AiScript.widthBeetweenMap), MidpointRounding.AwayFromZero);
+        int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
         int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
         nextTargetMapNode = mapNode[indexX][indexY];
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-        mBehaviour  = AiBehaviour.idle;
-        controller  = GetComponent<CharacterController>();
-        mAnimator   = GetComponent<Animator>();
-        mAnimation  = GetComponent<Animation>();
-        haveReadTheMap = false;
-        mAnimation.wrapMode = WrapMode.Loop;
-        
-        mWalkingCoordinatePath = new List<Vector2>();
-        mWalkingCoordinateNode = new List<MapNode>();
-        closedListNode = new List<MapNode>();
-        openListNode    = new List<MapNode>();
     }
 
     void updateAnimation()
@@ -348,15 +306,19 @@ public class AiScript : MonoBehaviour {
             yAI = UnityEngine.Random.Range(0, MazeDatabase.GetMaze[indexMap].GetLength(1));
             if (MazeDatabase.GetMaze[indexMap][xAI, yAI] == MazeGenerator.MAZEPATH)
             {
-                transform.position = new Vector3(xAI + indexMap * widthBeetweenMap, 0, yAI);
+                transform.position = new Vector3(xAI + indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0), 0, yAI);
                 return ;
             }
         } 
     }
-
+    void testingMovementManual() {
+        if(Input.GetKey("i"))transform.Translate(0.0f, 0, getSpeedFactor());
+        if (Input.GetKey("k")) transform.Translate(0.0f, 0, -getSpeedFactor());
+    }
     // Update is called once per frame
     void Update()
     {
+        
         if (!haveReadTheMap)
         {   // Try to read the map
             if (MazeDatabase.GetMaze[indexMap] != null)
@@ -399,38 +361,52 @@ public class AiScript : MonoBehaviour {
             }
             else
             {
+                testingMovementManual();
                 // Do the patroling and idle
-                if (mBehaviour == AiBehaviour.idle)
-                {
-                    if (idleTime >= maxIdleTime)
-                    {
-                        // change behaviour become patroling
-                        mBehaviour  = AiBehaviour.patroling;
-                        speedFactor = walkSpeedFactor;
-                        idleTime    = 0.0f;
-                        randomNextCordinate();
-                        setCurrentLocationAsStartNode();
-                        computePath();
-                        updateAnimation();
-                        
-                    }
-                    else {
-                        // do the idle
-                        idleTime += Time.deltaTime;
-                    }
-                }
-                else if (mBehaviour == AiBehaviour.patroling) {
-                    if (startMapNode == nextTargetMapNode)
-                    {
-                        // reaching the target location, change behaviour become idle
-                        mBehaviour = AiBehaviour.idle;
-                        idleTime = 0.0f;
-                        updateAnimation();
-                    }
-                    else {
-                        moving();
-                    }
-                }
+                //if (mBehaviour == AiBehaviour.idle)
+                //{
+                //    if (idleTime >= maxIdleTime)
+                //    {
+                //        // change behaviour become patroling
+                //        mBehaviour = AiBehaviour.patroling;
+                //        speedFactor = walkSpeedFactor;
+                //        idleTime = 0.0f;
+                //        randomNextCordinate();
+                //        setCurrentLocationAsStartNode();
+                //        computePath();
+                //        updateAnimation();
+
+                //    }
+                //    else {
+                //        // do the idle
+                //        idleTime += Time.deltaTime;
+                //    }
+                //}
+                //else if (mBehaviour == AiBehaviour.patroling) {
+                //    if (startMapNode == nextTargetMapNode)
+                //    {
+                //        // reaching the target location, change behaviour become idle
+                //        mBehaviour = AiBehaviour.idle;
+                //        idleTime = 0.0f;
+                //        updateAnimation();
+                //    }
+                //    else {
+                //        moving();
+                //    }
+                //} else if (mBehaviour == AiBehaviour.chasing) {
+                //    if (startMapNode == nextTargetMapNode)
+                //    {
+                //        // reaching the target location, change behaviour
+                //        mBehaviour = AiBehaviour.idle;
+                //        speedFactor = walkSpeedFactor;
+                //        idleTime = 0.0f;
+                //        updateAnimation();
+                //    }
+                //    else
+                //    {
+                //        moving();
+                //    }
+                //}
 
                 //if (movingState == 1)
                 //{

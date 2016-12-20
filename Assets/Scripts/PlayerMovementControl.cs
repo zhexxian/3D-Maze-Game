@@ -15,8 +15,6 @@ public class PlayerMovementControl : MonoBehaviour {
     public Animator mAnimator;
     private CharacterController controller;
     private int movingState = 0;    // 0 - iddle   || 1 - walking   || 2 - running
-    private int faceDirection = 2;  // 0 - camera direction   || 1 - right direction   || 2 - forward direction   || 3 - left direction
-
     private int prevMovingState = 0;
 
     public float getSpeedFactor(){
@@ -31,36 +29,11 @@ public class PlayerMovementControl : MonoBehaviour {
         return state==0? controlKeyMoving : controlKeyFacing;
     }
 
-    public int getDiretionToGo() {
-        if (Input.GetKey("s") || Input.GetKey("down"))  return 0;
-        if (Input.GetKey("d") || Input.GetKey("right")) return 1;
-        if (Input.GetKey("w") || Input.GetKey("up"))    return 2;
-        return 3;
-    }
-
     // Use this for initialization
     void Start () {
-        controller = GetComponent<CharacterController>();
-        mAnimator = GetComponent<Animator>();
-        locatePlayer();
-        GlobalVariable.CurrGemNumber = 0;
-    }
-
-    void locatePlayer(){
-        bool isFindStartLocation = false;
-        for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++)
-        {
-            for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++)
-            {
-                if (MazeDatabase.GetMaze[indexMap][y, x] == "S")
-                {
-                    transform.position = new Vector3(y * 30 + 10, 0.0f, x);
-                    isFindStartLocation = true;
-                }
-            }
-        }
-
-
+        controller  = GetComponent<CharacterController>();
+        mAnimator   = GetComponent<Animator>();
+        GlobalVariable.CurrGemNumber = 0;     
     }
 
     void updateAnimation() {
@@ -71,25 +44,22 @@ public class PlayerMovementControl : MonoBehaviour {
             case 2: mAnimator.Play("Run", -1, 0f); break;
         }    
     }
+
     void placePlayerInStartPosition()
     {
-        bool isFindStartPosition = false;
         for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++)
         {
             for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++)
             {
-                if (MazeDatabase.GetMaze[indexMap][y, x] == "S")
+                if (MazeDatabase.GetMaze[indexMap][y, x] == MazeGenerator.MAZESTART)
                 {
                     transform.position = new Vector3(x + indexMap*MazeDatabase.GetMaze[indexMap].GetLength(0), 0.0f, y);
-                    isFindStartPosition = true;
+                    return;
                 }
-                    if (isFindStartPosition) break;
-
-                }
-            if (isFindStartPosition) break;
+            }
         }
     }
-    // Update is called once per frame
+    
     void Update () {
         if (!readMap)
         {
@@ -100,10 +70,8 @@ public class PlayerMovementControl : MonoBehaviour {
             }
         }
         else {
-            
             if (isMovementControlKey(0) || isMovementControlKey(1))
             {
-
                 movingState = 0;
                 if (isMovementControlKey(1)) {
                     float deltaY = rotationSpeed;
@@ -116,14 +84,6 @@ public class PlayerMovementControl : MonoBehaviour {
                     var z = Input.GetAxis("Vertical") * getSpeedFactor();
                     transform.Translate(0, 0, z);
                 }
-                
-                
-                //int direction = getDiretionToGo();
-                //int rotateDegree = (faceDirection - direction) * 90;
-                //controller.transform.Rotate(Vector3.up, rotateDegree);
-                //transform.Translate(0.0f, 0, getSpeedFactor());
-                //faceDirection = direction;
-                
             }
             else
             {

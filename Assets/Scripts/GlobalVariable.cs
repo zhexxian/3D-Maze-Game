@@ -5,8 +5,8 @@ using System.Collections;
 public class GlobalVariable
 {
     private static Vector3 m_playerPosition;
-    private static int[] _maxGemNumber;
-    private static int _currGemNumber;
+    private static int[] _maxGemNumber = 0;
+    private static int _currGemNumber = 0;
     private static int _levelMap;
     
     public static int[] MaxGemNumber {
