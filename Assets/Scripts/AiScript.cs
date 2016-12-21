@@ -33,8 +33,6 @@ public class AiScript : MonoBehaviour {
     private MapNode startMapNode;       // Start Current Posisition of AI
     private MapNode nextTargetMapNode;  // Goal Posisition That AI should Go
     private List<MapNode> mWalkingCoordinateNode; // For Storing Which Node of Map that should passed
-    private List<MapNode> closedListNode;
-    private List<MapNode> openListNode;
 
     enum AiBehaviour{chasing,patroling,idle};
     private AiBehaviour mBehaviour;
@@ -50,8 +48,6 @@ public class AiScript : MonoBehaviour {
         mAnimator   = GetComponent<Animator>();
         mAnimation  = GetComponent<Animation>();
         haveReadTheMap  = false;
-        closedListNode  = new List<MapNode>();
-        openListNode    = new List<MapNode>();
         mAnimation.wrapMode = WrapMode.Loop;
         mWalkingCoordinateNode = new List<MapNode>();
     }
@@ -107,112 +103,6 @@ public class AiScript : MonoBehaviour {
         //    indexX <= startMapNode.getIndexX() + seenRange &&
         //    indexY >= startMapNode.getIndexY() - seenRange &&
         //    indexY <= startMapNode.getIndexY() + seenRange);
-    }
-
-    // A* Path
-    public void resetAllNodeCost() {
-        for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(0); x++)
-        {
-            for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(1); y++)
-            {
-                mapNode[x][y].resetCost(); ;
-            }
-        }
-    }
-
-    public float getHcostBetweenTwoNodes( MapNode start, MapNode goal ){
-        float dx = start.getIndexX() - goal.getIndexX();
-        float dy = start.getIndexY() - goal.getIndexY();
-        if ( dx< 0 ) dx = -dx;
-        if (dy < 0 ) dy = -dy;
-        return dx + dy;
-    }
-
-    public MapNode getNodeFromOpenList() {
-        MapNode minimum = null;
-        foreach (MapNode node in openListNode) {
-            if (minimum == null || node.getFvalue() < minimum.getFvalue()) {
-                minimum = node;
-            }
-        }
-        openListNode.Remove(minimum);
-        return minimum;
-    }
-
-    public List<MapNode> findNodesNeighbor(MapNode node) {
-        List<MapNode> neighbors = new List<MapNode>();
-        neighbors.Clear();
-        int indexX = node.getIndexX();
-        int indexY = node.getIndexY();
-        if (indexX - 1 >= 0 )
-        {
-            if (mapNode[indexX - 1][indexY].isAvailablePath())
-                neighbors.Add(mapNode[indexX - 1][indexY]);
-        }
-        if (indexX + 1 <= mapNode.GetLength(0))
-        {
-            if(mapNode[indexX + 1][indexY].isAvailablePath())
-                neighbors.Add(mapNode[indexX + 1][indexY]);
-        }
-        if (indexY - 1 >= 0 )
-        {
-            if(mapNode[indexX][indexY - 1].isAvailablePath())
-                neighbors.Add(mapNode[indexX][indexY - 1]);
-        }
-        if (indexY + 1 <= mapNode.GetLength(0))
-        {
-            if (mapNode[indexX][indexY + 1].isAvailablePath())
-                neighbors.Add(mapNode[indexX][indexY + 1]);
-        }
-
-        return neighbors;
-    }
-
-    public void BuildPathNode(MapNode node)
-    {
-        if (node == null) return;
-        BuildPathNode(node.getParent());
-        mWalkingCoordinateNode.Add(node);
-    }
-
-    public void computePath() {
-        openListNode.Clear();
-        closedListNode.Clear();
-        resetAllNodeCost();
-        bool search = true;
-        float g, h;
-        g = 0.0f;
-        h = getHcostBetweenTwoNodes(startMapNode, nextTargetMapNode);
-        startMapNode.updateCost(g, h);
-        openListNode.Add(startMapNode);
-        MapNode currentNode = null;
-        List<MapNode> currentNodeNeightbors = new List<MapNode>();
-        while (search)
-        {
-            currentNode = getNodeFromOpenList();
-            closedListNode.Add(currentNode);
-
-            if (currentNode == nextTargetMapNode)
-            {
-                BuildPathNode(nextTargetMapNode);
-                return;
-            }
-            currentNodeNeightbors = findNodesNeighbor(currentNode);
-            for (int a = 0; a < currentNodeNeightbors.Count; a++)
-            {
-                if (!closedListNode.Contains(currentNodeNeightbors[a]))
-                {
-                    g = currentNode.getGvalue() + 1;
-                    h = getHcostBetweenTwoNodes(currentNodeNeightbors[a], nextTargetMapNode);
-                    bool isBetter = currentNodeNeightbors[a].updateCost(g, h);
-                    if (isBetter || currentNodeNeightbors[a].getParent() != null)
-                    {
-                        currentNodeNeightbors[a].setParent(currentNode);
-                        openListNode.Add(currentNodeNeightbors[a]);
-                    }
-                }
-            }
-        }
     }
 
     public void moving() {
@@ -294,6 +184,7 @@ public class AiScript : MonoBehaviour {
                 mapNode[x][y] = new MapNode(x,y,indexMap);
             }
         }
+        AStarAlgorithm.setMapNode(mapNode);
     }
 
     void placeAIInStartPosition()
@@ -332,36 +223,37 @@ public class AiScript : MonoBehaviour {
         {
             if (isSeenPlayer())
             {
-                if (mBehaviour == AiBehaviour.chasing)
-                {
-                    if (startMapNode == nextTargetMapNode)
-                    {
-                        // reaching the target location, change behaviour
-                        mBehaviour  = AiBehaviour.idle;
-                        speedFactor = walkSpeedFactor;
-                        idleTime    = 0.0f;
+                switch (mBehaviour) {
+                    case AiBehaviour.chasing:
+                        if (startMapNode == nextTargetMapNode)
+                        {
+                            // reaching the target location, change behaviour
+                            mBehaviour = AiBehaviour.idle;
+                            speedFactor = walkSpeedFactor;
+                            idleTime = 0.0f;
+                            updateAnimation();
+                            // reset the player and decrease the player gem?
+                        }
+                        else
+                        {
+                            moving();
+                        }
+                        break;
+                    default:
+                        // Start running and compute A* path finding
+                        mBehaviour = AiBehaviour.chasing;
+                        speedFactor = runSpeedFactor;
+                        idleTime = 0.0f;
+                        setCurrentLocationAsStartNode();
+                        setMainPlayerLocationAsTargetNode();
+                        mWalkingCoordinateNode = AStarAlgorithm.computePath(startMapNode, nextTargetMapNode);
                         updateAnimation();
-                        // reset the player and decrease the player gem?
-                    }
-                    else {
-                        moving();
-                    }
-                    
+                        break;
                 }
-                else {
-                    // Start running and compute A* path finding
-                    mBehaviour  = AiBehaviour.chasing;
-                    speedFactor = runSpeedFactor;
-                    idleTime    = 0.0f;
-                    setCurrentLocationAsStartNode();
-                    setMainPlayerLocationAsTargetNode();
-                    computePath();
-                    updateAnimation();
-                }
+               
             }
             else
             {
-                testingMovementManual();
                 // Do the patroling and idle
                 //if (mBehaviour == AiBehaviour.idle)
                 //{

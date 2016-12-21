@@ -25,7 +25,8 @@ public class PlayerMovementControl : MonoBehaviour {
         // state = 0 -> moving ( W / S )
         // state = 1 -> Facing ( A / D )
         bool controlKeyMoving = Input.GetKey("w") || Input.GetKey("up") || Input.GetKey("s") || Input.GetKey("down");
-        bool controlKeyFacing = Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
+        //bool controlKeyFacing = Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
+        bool controlKeyFacing = Input.GetAxis("Mouse X") > 0 || Input.GetAxis("Mouse X") < 0;
         return state==0? controlKeyMoving : controlKeyFacing;
     }
 
@@ -74,15 +75,22 @@ public class PlayerMovementControl : MonoBehaviour {
             {
                 movingState = 0;
                 if (isMovementControlKey(1)) {
-                    float deltaY = rotationSpeed;
-                    if (Input.GetKey("a") || Input.GetKey("left")) deltaY *= -1;
-                    controller.transform.Rotate(Vector3.up, deltaY);
+                    // By keyboard
+                    //float deltaY = rotationSpeed;
+                    //if (Input.GetKey("a") || Input.GetKey("left")) deltaY *= -1;
+                    //controller.transform.Rotate(Vector3.up, deltaY);
+
+                    // By Mouse
+                    controller.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * rotationSpeed);
+                    //transform.LookAt(mycam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mycam.nearClipPlane)), Vector3.up);
                 }
                 if (isMovementControlKey(0)) {
                     movingState = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? 2 : 1;
                     speedFactor = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? runSpeedFactor : walkSpeedFactor;
                     var z = Input.GetAxis("Vertical") * getSpeedFactor();
                     transform.Translate(0, 0, z);
+                    // Update position to global variablec
+                    GlobalVariable.PlayerPosition = transform.position;
                 }
             }
             else
