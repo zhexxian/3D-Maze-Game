@@ -16,7 +16,7 @@ public class CreateMaze : MonoBehaviour
     void Start()
     {
         //initialize map
-        int[] gemNumber = new int[7];
+        int gemNumber = 0;
 
         const int mazesize = 10;
         //MazeDatabase.GenerateMaze (mazesize);
@@ -43,7 +43,6 @@ public class CreateMaze : MonoBehaviour
 
         for (int a = 1; a <= 6; a++)
         {
-            gemNumber[a] = 0; 
             plane[a] = GameObject.CreatePrimitive(PrimitiveType.Cube);
             plane[a].transform.position = new Vector3(a * MazeDatabase.GetMaze[a].GetLength(0) + 10, 0, 10);
             //maze[a].GetLength(0) --> horizontal; (1) --> vertical
@@ -90,7 +89,7 @@ public class CreateMaze : MonoBehaviour
                             //go.GetComponent<Renderer>().material = MaterialGem;
                             go.transform.localPosition = new Vector3(x + a * MazeDatabase.GetMaze[a].GetLength(0), 0.5f, y);
                             //go.transform.localScale = new Vector3(10, 10, 10);
-                            gemNumber[a]++;
+                            gemNumber++;
                         }
                         if (MazeDatabase.GetMaze[a][y, x] == "F")
                         {
