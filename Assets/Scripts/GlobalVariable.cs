@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using Assets.Scripts;
 
 public class GlobalVariable
 {
@@ -14,7 +15,11 @@ public class GlobalVariable
     public static int UnlockedLevel
     {
         get { return _unlockedLevel; }
-        set { _unlockedLevel = value; }
+        set {
+            _unlockedLevel = value;
+            DataControl.mGameData.unlockedLevel = _unlockedLevel;
+            DataControl.Save();
+        }
     }
 
     public static int IndexMap
