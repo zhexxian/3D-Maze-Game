@@ -51,6 +51,7 @@ public class CreateMaze : MonoBehaviour
             Material[] groundMaterialArr = new Material[1];
             groundMaterialArr[0] = groundMaterial;
             plane[a].GetComponent<MeshRenderer>().materials = groundMaterialArr;
+            plane[a].GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(40, 40);
 
             for (int y = 0; y < MazeDatabase.GetMaze[a].GetLength(0); y++)
             {

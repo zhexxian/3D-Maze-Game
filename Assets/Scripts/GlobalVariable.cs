@@ -8,9 +8,9 @@ public class GlobalVariable
     private static Vector3 m_playerPosition;
     private static int _maxGemNumber;
     private static int _currGemNumber;
-    private static int _levelMap; // 1 - 3
-    private static int _indexMap; // 0 - 5
-    private static int _unlockedLevel; // 1 - 3
+    private static int _levelMap = 1; // 1 - 3
+    private static int _indexMap = 0; // 0 - 5
+    private static int _unlockedLevel = 1; // 1 - 3
 
     public static int UnlockedLevel
     {

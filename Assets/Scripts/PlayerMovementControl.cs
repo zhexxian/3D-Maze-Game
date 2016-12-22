@@ -7,6 +7,8 @@ public class PlayerMovementControl : MonoBehaviour {
     public float walkSpeedFactor = 2.0f;
     public float runSpeedFactor = 6.0f;
     public float rotationSpeed = 2.0f;
+    public float sideStepSpeed = 0.1f;
+    public bool enableSideStep = true;
     private float speedFactor = 0.0f;
     private bool readMap = false;
     private int indexMap = 1; // 1-6 
@@ -25,6 +27,7 @@ public class PlayerMovementControl : MonoBehaviour {
         // state = 0 -> moving ( W / S )
         // state = 1 -> Facing ( A / D )
         bool controlKeyMoving = Input.GetKey("w") || Input.GetKey("up") || Input.GetKey("s") || Input.GetKey("down");
+        if(enableSideStep) controlKeyMoving = controlKeyMoving || Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
         //bool controlKeyFacing = Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
         bool controlKeyFacing = Input.GetAxis("Mouse X") > 0 || Input.GetAxis("Mouse X") < 0;
         return state==0? controlKeyMoving : controlKeyFacing;
@@ -88,7 +91,8 @@ public class PlayerMovementControl : MonoBehaviour {
                     movingState = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? 2 : 1;
                     speedFactor = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? runSpeedFactor : walkSpeedFactor;
                     var z = Input.GetAxis("Vertical") * getSpeedFactor();
-                    transform.Translate(0, 0, z);
+                    var x = enableSideStep ? Input.GetAxis("Horizontal") * sideStepSpeed  : 0;
+                    transform.Translate(x, 0, z);
                     // Update position to global variablec
                     GlobalVariable.PlayerPosition = transform.position;
                 }
