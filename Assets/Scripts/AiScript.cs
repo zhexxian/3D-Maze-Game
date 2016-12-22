@@ -65,9 +65,9 @@ public class AiScript : MonoBehaviour {
         {
             x = UnityEngine.Random.Range(0, MazeDatabase.GetMaze[indexMap].GetLength(0));
             y = UnityEngine.Random.Range(0, MazeDatabase.GetMaze[indexMap].GetLength(1));
-            if (MazeDatabase.GetMaze[indexMap][x, y] == MazeGenerator.MAZEPATH)
+            if (MazeDatabase.GetMaze[indexMap][y, x] == MazeGenerator.MAZEPATH)
             {
-                nextTargetMapNode = mapNode[x][y];
+                nextTargetMapNode = mapNode[y][x];
                 return;
             }
         }
@@ -93,7 +93,7 @@ public class AiScript : MonoBehaviour {
     public bool isSeenPlayer() {
         // if location player and ai within in xx range and yy range
         
-        setCurrentLocationAsStartNode();
+        //setCurrentLocationAsStartNode();
         float playerX = mainPlayer.transform.position.x;
         float playerZ = mainPlayer.transform.position.z;
         int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
@@ -112,7 +112,8 @@ public class AiScript : MonoBehaviour {
             {
 
             }
-            else if(walkingNodeIndex < mWalkingCoordinateNode.Count) {
+            else if (walkingNodeIndex < mWalkingCoordinateNode.Count)
+            {
                 nextTargetCoordinat = mWalkingCoordinateNode[walkingNodeIndex + 1].getPosition();
                 bool arrive = nextTargetCoordinat.x - radius < controller.transform.position.x && nextTargetCoordinat.x + radius > controller.transform.position.x;
                 arrive = arrive && nextTargetCoordinat.y - radius < controller.transform.position.z && nextTargetCoordinat.y + radius > controller.transform.position.z;
@@ -124,12 +125,13 @@ public class AiScript : MonoBehaviour {
                     transform.Translate(0.0f, 0, getSpeedFactor());
                     faceDirection = direction;
                 }
-                else {
+                else
+                {
                     walkingNodeIndex++;
                     setCurrentLocationAsStartNode();
                 }
 
-                
+
 
             }
 
@@ -137,26 +139,26 @@ public class AiScript : MonoBehaviour {
         //simple moving
         //float movementX = getSpeedFactor();
         //float movementZ = getSpeedFactor();
-        //float playerX = nextTargetMapNode.getPosition().x;
-        //float playerZ = nextTargetMapNode.getPosition().y;
-        //if (playerX <= transform.position.x) movementX *= -1;
-        //if (playerZ <= transform.position.z) movementZ *= -1;
+        //float goalX = nextTargetMapNode.getPosition().x;
+        //float goalZ = nextTargetMapNode.getPosition().y;
+        //if (goalX <= transform.position.x) movementX *= -1;
+        //if (goalZ <= transform.position.z) movementZ *= -1;
         //transform.Translate(movementX, 0, movementZ);
         //setCurrentLocationAsStartNode();
     }
     
     public void setCurrentLocationAsStartNode() {
-        int indexX = (int)Math.Round((transform.position.x- indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
-        int indexY = (int)Math.Round(transform.position.z, MidpointRounding.AwayFromZero);
-        startMapNode = mapNode[indexX][indexY];
+        int indexX = (int)Math.Round((transform.position.x - indexMap * mapNode.Length), MidpointRounding.AwayFromZero);
+        int indexY = (int)Math.Round( transform.position.z, MidpointRounding.AwayFromZero);
+        startMapNode = mapNode[indexY][indexX];
     }
 
     public void setMainPlayerLocationAsTargetNode() {
-        float playerX = GameObject.Find("MainPlayer").transform.position.x;
-        float playerZ = GameObject.Find("MainPlayer").transform.position.z;
+        float playerX = mainPlayer.transform.position.x;
+        float playerZ = mainPlayer.transform.position.z;
         int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
-        int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
-        nextTargetMapNode = mapNode[indexX][indexY];
+        int indexY = (int)Math.Round( playerZ, MidpointRounding.AwayFromZero);
+        nextTargetMapNode = mapNode[indexY][indexX];
     }
 
     void updateAnimation()
@@ -178,13 +180,50 @@ public class AiScript : MonoBehaviour {
     void initMapNode()
     {
         mapNode = new MapNode[MazeDatabase.GetMaze[indexMap].GetLength(0)][];
-        for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(0); x++){
-            mapNode[x] = new MapNode[MazeDatabase.GetMaze[indexMap].GetLength(1)];
-            for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(1); y++){
-                mapNode[x][y] = new MapNode(x,y,indexMap);
+        
+        for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++){
+            mapNode[y] = new MapNode[MazeDatabase.GetMaze[indexMap].GetLength(1)];
+            String row = "";
+            for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++){
+                mapNode[y][x] = new MapNode(x,y,indexMap);
+                if (mapNode[y][x].isAvailablePath())
+                    row += "0";
+                else
+                    row += "8" ;
             }
+            Debug.Log(row);
         }
+        
+        //Debug.Log("Init Set Map Node : " + mapNode[0].Length + " - " + mapNode.Length);
         AStarAlgorithm.setMapNode(mapNode);
+    }
+
+    void startIdle() {
+        Debug.Log("Start Idle");
+        mBehaviour  = AiBehaviour.idle;
+        speedFactor = walkSpeedFactor;
+        idleTime    = 0.0f;
+        updateAnimation();
+    }
+    void startPatroling() {
+        Debug.Log("Start Patroling");
+        mBehaviour  = AiBehaviour.patroling;
+        speedFactor = walkSpeedFactor;
+        idleTime = 0.0f;
+        setCurrentLocationAsStartNode();
+        randomNextCordinate();
+        mWalkingCoordinateNode = AStarAlgorithm.computePath(startMapNode, nextTargetMapNode);
+        updateAnimation();
+    }
+    void startChasing() {
+        Debug.Log("Start Chasing");
+        mBehaviour  = AiBehaviour.chasing;
+        speedFactor = runSpeedFactor;
+        idleTime    = 0.0f;
+        setCurrentLocationAsStartNode();
+        setMainPlayerLocationAsTargetNode();
+        mWalkingCoordinateNode = AStarAlgorithm.computePath(startMapNode, nextTargetMapNode);
+        updateAnimation();
     }
 
     void placeAIInStartPosition()
@@ -195,7 +234,7 @@ public class AiScript : MonoBehaviour {
         while (true) {
             xAI = UnityEngine.Random.Range(0, MazeDatabase.GetMaze[indexMap].GetLength(0));
             yAI = UnityEngine.Random.Range(0, MazeDatabase.GetMaze[indexMap].GetLength(1));
-            if (MazeDatabase.GetMaze[indexMap][xAI, yAI] == MazeGenerator.MAZEPATH)
+            if (MazeDatabase.GetMaze[indexMap][yAI, xAI] == MazeGenerator.MAZEPATH)
             {
                 transform.position = new Vector3(xAI + indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0), 0, yAI);
                 return ;
@@ -228,10 +267,7 @@ public class AiScript : MonoBehaviour {
                         if (startMapNode == nextTargetMapNode)
                         {
                             // reaching the target location, change behaviour
-                            mBehaviour = AiBehaviour.idle;
-                            speedFactor = walkSpeedFactor;
-                            idleTime = 0.0f;
-                            updateAnimation();
+                            startIdle();
                             // reset the player and decrease the player gem?
                         }
                         else
@@ -240,14 +276,7 @@ public class AiScript : MonoBehaviour {
                         }
                         break;
                     default:
-                        // Start running and compute A* path finding
-                        mBehaviour = AiBehaviour.chasing;
-                        speedFactor = runSpeedFactor;
-                        idleTime = 0.0f;
-                        setCurrentLocationAsStartNode();
-                        setMainPlayerLocationAsTargetNode();
-                        mWalkingCoordinateNode = AStarAlgorithm.computePath(startMapNode, nextTargetMapNode);
-                        updateAnimation();
+                        startChasing();
                         break;
                 }
                
@@ -255,60 +284,18 @@ public class AiScript : MonoBehaviour {
             else
             {
                 // Do the patroling and idle
-                //if (mBehaviour == AiBehaviour.idle)
-                //{
-                //    if (idleTime >= maxIdleTime)
-                //    {
-                //        // change behaviour become patroling
-                //        mBehaviour = AiBehaviour.patroling;
-                //        speedFactor = walkSpeedFactor;
-                //        idleTime = 0.0f;
-                //        randomNextCordinate();
-                //        setCurrentLocationAsStartNode();
-                //        computePath();
-                //        updateAnimation();
-
-                //    }
-                //    else {
-                //        // do the idle
-                //        idleTime += Time.deltaTime;
-                //    }
-                //}
-                //else if (mBehaviour == AiBehaviour.patroling) {
-                //    if (startMapNode == nextTargetMapNode)
-                //    {
-                //        // reaching the target location, change behaviour become idle
-                //        mBehaviour = AiBehaviour.idle;
-                //        idleTime = 0.0f;
-                //        updateAnimation();
-                //    }
-                //    else {
-                //        moving();
-                //    }
-                //} else if (mBehaviour == AiBehaviour.chasing) {
-                //    if (startMapNode == nextTargetMapNode)
-                //    {
-                //        // reaching the target location, change behaviour
-                //        mBehaviour = AiBehaviour.idle;
-                //        speedFactor = walkSpeedFactor;
-                //        idleTime = 0.0f;
-                //        updateAnimation();
-                //    }
-                //    else
-                //    {
-                //        moving();
-                //    }
-                //}
-
-                //if (movingState == 1)
-                //{
-                //    // Patroling random available path
-                //    int direction = getDiretionToGo();
-                //    int rotateDegree = (faceDirection - direction) * 90;
-                //    controller.transform.Rotate(Vector3.up, rotateDegree);
-                //    transform.Translate(0.0f, 0, getSpeedFactor());
-                //    faceDirection = direction;
-                //}
+                switch (mBehaviour)
+                {
+                    case AiBehaviour.idle       :
+                        if (idleTime >= maxIdleTime) startPatroling();
+                        else idleTime += Time.deltaTime; // Iddle 
+                        break;
+                    case AiBehaviour.patroling  :
+                    case AiBehaviour.chasing    :
+                        if (startMapNode == nextTargetMapNode) startIdle();
+                        else moving();
+                        break;
+                }
             }
         }
         

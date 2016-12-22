@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -13,8 +14,10 @@ namespace Assets.Scripts
         private static MapNode[][] mapNode;
 
         // Should call this
-        public static void setMapNode(MapNode[][] mapNode) {
-            AStarAlgorithm.mapNode = mapNode;
+        public static void setMapNode(MapNode[][] _mapNode) {
+            mapNode = _mapNode;
+            Debug.Log("Init Set Map Node : " + mapNode.Length + " - " + mapNode[0].Length);
+
         }
 
         public static List<MapNode> computePath(MapNode startNode, MapNode goalNode) {
@@ -22,22 +25,25 @@ namespace Assets.Scripts
             AiPathNode.Clear();
             openListNode.Clear();
             closedListNode.Clear();
-            bool search = true;
             float g = 0.0f;
             float h = getHcostBetweenTwoNodes(startNode, goalNode);
+            Debug.Log("Start node : " + startNode.getIndexX() + "," + startNode.getIndexY());
+            Debug.Log("Goal node : " + goalNode.getIndexX() + "," + goalNode.getIndexY());
             startNode.updateCost(g, h);
             openListNode.Add(startNode);
             MapNode currentNode = null;
             List<MapNode> currentNodeNeightbors = new List<MapNode>();
-            while (search)
+            for(int i = 0; i < mapNode.Length * mapNode[0].Length; i++)
             {
                 currentNode = getOptimalNodeFromOpenList();
                 closedListNode.Add(currentNode);
 
                 if (currentNode == goalNode)
                 {
-                    BuildPathNode(goalNode);
-                    break;
+                    Debug.Log("Find A Way");
+                    //BuildPathNode(goalNode);
+                    return AiPathNode;
+                    //break;
                 }
                 currentNodeNeightbors = findNodesNeighbor(currentNode);
                 for (int a = 0; a < currentNodeNeightbors.Count; a++)
@@ -50,45 +56,50 @@ namespace Assets.Scripts
                         if (isBetter || currentNodeNeightbors[a].getParent() != null)
                         {
                             currentNodeNeightbors[a].setParent(currentNode);
-                            openListNode.Add(currentNodeNeightbors[a]);
+                            if(!openListNode.Contains(currentNodeNeightbors[a]))
+                                openListNode.Add(currentNodeNeightbors[a]);
                         }
                     }
                 }
             }
-
+            Debug.Log("Fail to find A Way");
             return AiPathNode;
         }
         private static MapNode getOptimalNodeFromOpenList() {
-            MapNode optimalNode = null;
-
+            MapNode optimalNode = openListNode[0];
+            for (int a = 0; a < openListNode.Count; a++) {
+                if (openListNode[a].getFvalue() <= optimalNode.getFvalue()) optimalNode = openListNode[a];
+            }
+            openListNode.Remove(optimalNode);
+            Debug.Log("Find An optimal node : " + optimalNode.getIndexX() + "," + optimalNode.getIndexY() + " || F = " + optimalNode.getFvalue() + ", G = " + optimalNode.getGvalue() + ", H = " + optimalNode.getHvalue());
             return optimalNode;
         }
 
         private static List<MapNode> findNodesNeighbor(MapNode node)
         {
-            List<MapNode> neighbors = new List<MapNode>();
+            List <MapNode> neighbors = new List<MapNode>();
             neighbors.Clear();
             int indexX = node.getIndexX();
             int indexY = node.getIndexY();
-            if (indexX - 1 >= 0)
+            if (indexX - 1 > 0)
             {
-                if (mapNode[indexX - 1][indexY].isAvailablePath())
-                    neighbors.Add(mapNode[indexX - 1][indexY]);
+                if (mapNode[indexY][indexX - 1].isAvailablePath())
+                    neighbors.Add(mapNode[indexY][indexX - 1]);
             }
-            if (indexX + 1 <= mapNode.GetLength(0))
+            if (indexX + 1 < mapNode.Length)
             {
-                if (mapNode[indexX + 1][indexY].isAvailablePath())
-                    neighbors.Add(mapNode[indexX + 1][indexY]);
+                if (mapNode[indexY][indexX + 1].isAvailablePath())
+                    neighbors.Add(mapNode[indexY][indexX + 1]);
             }
-            if (indexY - 1 >= 0)
+            if (indexY - 1 > 0)
             {
-                if (mapNode[indexX][indexY - 1].isAvailablePath())
-                    neighbors.Add(mapNode[indexX][indexY - 1]);
+                if (mapNode[indexY - 1][indexX].isAvailablePath())
+                    neighbors.Add(mapNode[indexY - 1][indexX]);
             }
-            if (indexY + 1 <= mapNode.GetLength(0))
+            if (indexY + 1 <= mapNode.Length)
             {
-                if (mapNode[indexX][indexY + 1].isAvailablePath())
-                    neighbors.Add(mapNode[indexX][indexY + 1]);
+                if (mapNode[indexY + 1][indexX].isAvailablePath())
+                    neighbors.Add(mapNode[indexY + 1][indexX]);
             }
 
             return neighbors;
@@ -99,6 +110,7 @@ namespace Assets.Scripts
             if (node == null) return;
             BuildPathNode(node.getParent());
             AiPathNode.Add(node);
+            Debug.Log("Index = " + node.getIndexX() + ","+node.getIndexY() +"  ||  "+node.getPosition().x + "," + node.getPosition().y);
         }
 
         private static float getHcostBetweenTwoNodes(MapNode start, MapNode goal)
@@ -112,11 +124,11 @@ namespace Assets.Scripts
 
         private static void resetAllNodeCost()
         {
-            for (int x = 0; x < MazeDatabase.GetMaze[0].GetLength(0); x++)
+            for (int y = 0; y < mapNode.Length; y++)
             {
-                for (int y = 0; y < MazeDatabase.GetMaze[0].GetLength(1); y++)
+                for (int x = 0; x < mapNode[0].Length; x++)
                 {
-                    mapNode[x][y].resetCost(); ;
+                    mapNode[y][x].resetCost(); ;
                 }
             }
         }

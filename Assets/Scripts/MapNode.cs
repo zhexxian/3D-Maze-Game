@@ -20,7 +20,7 @@ namespace Assets.Scripts
             this.indexX = indexX;
             this.indexY = indexY;
             this.mParent = null;
-            this.availablePath = (MazeDatabase.GetMaze[indexMap][indexX, indexY] != MazeGenerator.MAZEPATH);
+            this.availablePath = (MazeDatabase.GetMaze[indexMap][indexY, indexX] != MazeGenerator.MAZEWALL);
             this.posisition = new Vector2(indexX + indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0), indexY);
             resetCost();
         }
@@ -51,6 +51,10 @@ namespace Assets.Scripts
         public float getGvalue()
         {
             return gValue;
+        }
+        public float getHvalue()
+        {
+            return hValue;
         }
         public int getIndexX()
         {
