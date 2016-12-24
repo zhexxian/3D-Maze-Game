@@ -65,7 +65,6 @@
   <ItemGroup>
     <Compile Include="Assets\Gem\GemExample\Scripts\DemoTimeOfDay.cs" />
     <Compile Include="Assets\Gem\GemExample\Scripts\Orbit.cs" />
-    <Compile Include="Assets\GemCountScript.cs" />
     <Compile Include="Assets\Scripts\AStarAlgorithm.cs" />
     <Compile Include="Assets\Scripts\AiScript.cs" />
     <Compile Include="Assets\Scripts\AnimationMainMenu.cs" />
@@ -85,6 +84,7 @@
     <Compile Include="Assets\Scripts\MazeDatabase.cs" />
     <Compile Include="Assets\Scripts\MazeGenerator.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementControl.cs" />
+    <Compile Include="Assets\Scripts\scaleMesh.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Gem\Shaders\Gem.shader" />

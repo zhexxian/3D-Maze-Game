@@ -7,13 +7,11 @@ using Assets.Scripts;
 public class AiScript : MonoBehaviour {
 
     public int monster_id;
-    public float radius = 0.5f;
+    public float radius = 0.01f;
 
     private MapNode[][] mapNode;
-    private Animator mAnimator;
     private Animation mAnimation;
     private CharacterController controller;
-    
 
     // Public for GUI parameter input
     public float maxIdleTime        = 3.0f;
@@ -45,7 +43,6 @@ public class AiScript : MonoBehaviour {
         mainPlayer  = GameObject.Find("MainPlayer");
         mBehaviour  = AiBehaviour.idle;
         controller  = GetComponent<CharacterController>();
-        mAnimator   = GetComponent<Animator>();
         mAnimation  = GetComponent<Animation>();
         haveReadTheMap  = false;
         mAnimation.wrapMode = WrapMode.Loop;
@@ -75,7 +72,6 @@ public class AiScript : MonoBehaviour {
 
     public int getDiretionToGo()
     {
-        
         if (nextTargetCoordinat.x - radius > controller.transform.position.x) // go to right
             return 1;
         if (nextTargetCoordinat.x + radius < controller.transform.position.x) // go to left
@@ -84,9 +80,6 @@ public class AiScript : MonoBehaviour {
             return 2;
         if (nextTargetCoordinat.y + radius < controller.transform.position.z) // go to down
             return 0;
-
-        //movingState = 0;
-        //updateAnimation();
         return faceDirection;
     }
 
@@ -94,10 +87,10 @@ public class AiScript : MonoBehaviour {
         // if location player and ai within in xx range and yy range
         
         //setCurrentLocationAsStartNode();
-        float playerX = mainPlayer.transform.position.x;
-        float playerZ = mainPlayer.transform.position.z;
-        int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
-        int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
+        //float playerX = mainPlayer.transform.position.x;
+        //float playerZ = mainPlayer.transform.position.z;
+        //int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
+        //int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
         return false;
         //return (indexX >= startMapNode.getIndexX() - seenRange &&
         //    indexX <= startMapNode.getIndexX() + seenRange &&
@@ -108,46 +101,40 @@ public class AiScript : MonoBehaviour {
     public void moving() {
         if (mWalkingCoordinateNode.Count > 0)
         {
-            if (walkingNodeIndex == mWalkingCoordinateNode.Count)
-            {
-
-            }
-            else if (walkingNodeIndex < mWalkingCoordinateNode.Count)
+            if (walkingNodeIndex < mWalkingCoordinateNode.Count)
             {
                 nextTargetCoordinat = mWalkingCoordinateNode[walkingNodeIndex + 1].getPosition();
-                bool arrive = nextTargetCoordinat.x - radius < controller.transform.position.x && nextTargetCoordinat.x + radius > controller.transform.position.x;
-                arrive = arrive && nextTargetCoordinat.y - radius < controller.transform.position.z && nextTargetCoordinat.y + radius > controller.transform.position.z;
+                bool arriveX = nextTargetCoordinat.x - radius < controller.transform.position.x && nextTargetCoordinat.x + radius > controller.transform.position.x;
+                bool arriveY = nextTargetCoordinat.y - radius < controller.transform.position.z && nextTargetCoordinat.y + radius > controller.transform.position.z;
+                bool arrive = arriveX && arriveY;
                 if (!arrive)
                 {
                     int direction = getDiretionToGo();
                     int rotateDegree = (faceDirection - direction) * 90;
                     controller.transform.Rotate(Vector3.up, rotateDegree);
-                    transform.Translate(0.0f, 0, getSpeedFactor());
+                    transform.Translate(0.0f, 0.0f, getSpeedFactor());
                     faceDirection = direction;
                 }
                 else
                 {
+                    float dX = nextTargetCoordinat.x - controller.transform.position.x;
+                    float dY = nextTargetCoordinat.y - controller.transform.position.z;
+                    float minX = nextTargetCoordinat.x - 0.1f;
+                    float maxX = nextTargetCoordinat.x + 0.1f;
+                    float minY = nextTargetCoordinat.y - 0.1f;
+                    float maxY = nextTargetCoordinat.y + 0.1f;
+                    Debug.Log("Next node");
+                    Debug.Log("X1 = " + controller.transform.position.x + " , Y1 = " + controller.transform.position.z);
                     walkingNodeIndex++;
                     setCurrentLocationAsStartNode();
                 }
-
-
-
             }
 
         }
-        //simple moving
-        //float movementX = getSpeedFactor();
-        //float movementZ = getSpeedFactor();
-        //float goalX = nextTargetMapNode.getPosition().x;
-        //float goalZ = nextTargetMapNode.getPosition().y;
-        //if (goalX <= transform.position.x) movementX *= -1;
-        //if (goalZ <= transform.position.z) movementZ *= -1;
-        //transform.Translate(movementX, 0, movementZ);
-        //setCurrentLocationAsStartNode();
     }
     
     public void setCurrentLocationAsStartNode() {
+        Debug.Log("MapNode Length = " + mapNode.Length);
         int indexX = (int)Math.Round((transform.position.x - indexMap * mapNode.Length), MidpointRounding.AwayFromZero);
         int indexY = (int)Math.Round( transform.position.z, MidpointRounding.AwayFromZero);
         startMapNode = mapNode[indexY][indexX];
@@ -180,21 +167,12 @@ public class AiScript : MonoBehaviour {
     void initMapNode()
     {
         mapNode = new MapNode[MazeDatabase.GetMaze[indexMap].GetLength(0)][];
-        
         for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++){
             mapNode[y] = new MapNode[MazeDatabase.GetMaze[indexMap].GetLength(1)];
-            String row = "";
             for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++){
                 mapNode[y][x] = new MapNode(x,y,indexMap);
-                if (mapNode[y][x].isAvailablePath())
-                    row += "0";
-                else
-                    row += "8" ;
             }
-            Debug.Log(row);
         }
-        
-        //Debug.Log("Init Set Map Node : " + mapNode[0].Length + " - " + mapNode.Length);
         AStarAlgorithm.setMapNode(mapNode);
     }
 
@@ -212,6 +190,7 @@ public class AiScript : MonoBehaviour {
         idleTime = 0.0f;
         setCurrentLocationAsStartNode();
         randomNextCordinate();
+        walkingNodeIndex = 0;
         mWalkingCoordinateNode = AStarAlgorithm.computePath(startMapNode, nextTargetMapNode);
         updateAnimation();
     }
@@ -222,10 +201,10 @@ public class AiScript : MonoBehaviour {
         idleTime    = 0.0f;
         setCurrentLocationAsStartNode();
         setMainPlayerLocationAsTargetNode();
+        walkingNodeIndex = 0;
         mWalkingCoordinateNode = AStarAlgorithm.computePath(startMapNode, nextTargetMapNode);
         updateAnimation();
     }
-
     void placeAIInStartPosition()
     {
         // read name of AI to decide index map => 1 - 6
@@ -244,6 +223,7 @@ public class AiScript : MonoBehaviour {
     void testingMovementManual() {
         if(Input.GetKey("i"))transform.Translate(0.0f, 0, getSpeedFactor());
         if (Input.GetKey("k")) transform.Translate(0.0f, 0, -getSpeedFactor());
+        if (Input.GetKey("r")) resetPlayer();
     }
     // Update is called once per frame
     void Update()
@@ -260,6 +240,7 @@ public class AiScript : MonoBehaviour {
         }
         else
         {
+            testingMovementManual();
             if (isSeenPlayer())
             {
                 switch (mBehaviour) {
@@ -269,6 +250,7 @@ public class AiScript : MonoBehaviour {
                             // reaching the target location, change behaviour
                             startIdle();
                             // reset the player and decrease the player gem?
+                            resetPlayer();
                         }
                         else
                         {
@@ -292,7 +274,7 @@ public class AiScript : MonoBehaviour {
                         break;
                     case AiBehaviour.patroling  :
                     case AiBehaviour.chasing    :
-                        if (startMapNode == nextTargetMapNode) startIdle();
+                        if (startMapNode == nextTargetMapNode)startIdle();
                         else moving();
                         break;
                 }
@@ -301,5 +283,12 @@ public class AiScript : MonoBehaviour {
         
 
 
+    }
+
+    void resetPlayer()
+    {
+        // Decrease Gem into half
+        GlobalVariable.CurrGemNumber = GlobalVariable.CurrGemNumber > 1?(int)Math.Round((double)(GlobalVariable.CurrGemNumber/2), MidpointRounding.AwayFromZero):0;
+        PlayerMovementControl.resetPlayer = true;
     }
 }

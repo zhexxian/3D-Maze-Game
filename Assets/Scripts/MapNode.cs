@@ -27,6 +27,7 @@ namespace Assets.Scripts
         public void resetCost()
         {
             this.fValue = this.gValue = this.hValue = -1.0f;
+            mParent = null;
         }
         public void setParent(MapNode mParent)
         {

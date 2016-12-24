@@ -3,12 +3,14 @@ using System.Collections;
 
 public class PlayerMovementControl : MonoBehaviour {
 
+    public static bool resetPlayer = false;
     // Public for GUI parameter input
     public float walkSpeedFactor = 2.0f;
     public float runSpeedFactor = 6.0f;
     public float rotationSpeed = 2.0f;
     public float sideStepSpeed = 0.1f;
     public bool enableSideStep = true;
+    public bool controlByMouse = true;
     private float speedFactor = 0.0f;
     private bool readMap = false;
     private int indexMap = 1; // 1-6 
@@ -27,9 +29,8 @@ public class PlayerMovementControl : MonoBehaviour {
         // state = 0 -> moving ( W / S )
         // state = 1 -> Facing ( A / D )
         bool controlKeyMoving = Input.GetKey("w") || Input.GetKey("up") || Input.GetKey("s") || Input.GetKey("down");
-        if(enableSideStep) controlKeyMoving = controlKeyMoving || Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
-        //bool controlKeyFacing = Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
-        bool controlKeyFacing = Input.GetAxis("Mouse X") > 0 || Input.GetAxis("Mouse X") < 0;
+        if(enableSideStep && controlByMouse) controlKeyMoving = controlKeyMoving || Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
+        bool controlKeyFacing = (controlByMouse) ? (Input.GetAxis("Mouse X") > 0 || Input.GetAxis("Mouse X") < 0) : Input.GetKey("a") || Input.GetKey("left") || Input.GetKey("d") || Input.GetKey("right");
         return state==0? controlKeyMoving : controlKeyFacing;
     }
 
@@ -70,22 +71,33 @@ public class PlayerMovementControl : MonoBehaviour {
             if (MazeDatabase.GetMaze[indexMap] != null)
             {
                 readMap = true;
+                movingState = 0;
                 placePlayerInStartPosition();
+                updateAnimation();
             }
         }
         else {
+            if (resetPlayer) {
+                placePlayerInStartPosition();
+                resetPlayer = false;
+            }
             if (isMovementControlKey(0) || isMovementControlKey(1))
             {
                 movingState = 0;
                 if (isMovementControlKey(1)) {
-                    // By keyboard
-                    //float deltaY = rotationSpeed;
-                    //if (Input.GetKey("a") || Input.GetKey("left")) deltaY *= -1;
-                    //controller.transform.Rotate(Vector3.up, deltaY);
+                    
+                    if (controlByMouse)
+                    {   // Direction Controled By Mouse
+                        controller.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * rotationSpeed);
+                        //transform.LookAt(mycam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mycam.nearClipPlane)), Vector3.up);
+                    }
+                    else {
+                        // Direction Controled By keyboard
+                        float deltaY = rotationSpeed;
+                        if (Input.GetKey("a") || Input.GetKey("left")) deltaY *= -1;
+                        controller.transform.Rotate(Vector3.up, deltaY);
+                    }
 
-                    // By Mouse
-                    controller.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * rotationSpeed);
-                    //transform.LookAt(mycam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mycam.nearClipPlane)), Vector3.up);
                 }
                 if (isMovementControlKey(0)) {
                     movingState = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? 2 : 1;

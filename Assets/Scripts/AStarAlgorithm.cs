@@ -11,6 +11,7 @@ namespace Assets.Scripts
         private static List<MapNode> closedListNode = new List<MapNode>();
         private static List<MapNode> openListNode = new List<MapNode>();
         private static List<MapNode> AiPathNode = new List<MapNode>();
+        private static List<MapNode> currentNodeNeightbors = new List<MapNode>();
         private static MapNode[][] mapNode;
 
         // Should call this
@@ -25,6 +26,7 @@ namespace Assets.Scripts
             AiPathNode.Clear();
             openListNode.Clear();
             closedListNode.Clear();
+            currentNodeNeightbors.Clear();
             float g = 0.0f;
             float h = getHcostBetweenTwoNodes(startNode, goalNode);
             Debug.Log("Start node : " + startNode.getIndexX() + "," + startNode.getIndexY());
@@ -32,7 +34,6 @@ namespace Assets.Scripts
             startNode.updateCost(g, h);
             openListNode.Add(startNode);
             MapNode currentNode = null;
-            List<MapNode> currentNodeNeightbors = new List<MapNode>();
             for(int i = 0; i < mapNode.Length * mapNode[0].Length; i++)
             {
                 currentNode = getOptimalNodeFromOpenList();
@@ -41,7 +42,7 @@ namespace Assets.Scripts
                 if (currentNode == goalNode)
                 {
                     Debug.Log("Find A Way");
-                    //BuildPathNode(goalNode);
+                    BuildPathNode(goalNode);
                     return AiPathNode;
                     //break;
                 }
@@ -63,7 +64,7 @@ namespace Assets.Scripts
                 }
             }
             Debug.Log("Fail to find A Way");
-            return AiPathNode;
+        return AiPathNode;
         }
         private static MapNode getOptimalNodeFromOpenList() {
             MapNode optimalNode = openListNode[0];
@@ -71,7 +72,6 @@ namespace Assets.Scripts
                 if (openListNode[a].getFvalue() <= optimalNode.getFvalue()) optimalNode = openListNode[a];
             }
             openListNode.Remove(optimalNode);
-            Debug.Log("Find An optimal node : " + optimalNode.getIndexX() + "," + optimalNode.getIndexY() + " || F = " + optimalNode.getFvalue() + ", G = " + optimalNode.getGvalue() + ", H = " + optimalNode.getHvalue());
             return optimalNode;
         }
 
@@ -110,7 +110,6 @@ namespace Assets.Scripts
             if (node == null) return;
             BuildPathNode(node.getParent());
             AiPathNode.Add(node);
-            Debug.Log("Index = " + node.getIndexX() + ","+node.getIndexY() +"  ||  "+node.getPosition().x + "," + node.getPosition().y);
         }
 
         private static float getHcostBetweenTwoNodes(MapNode start, MapNode goal)

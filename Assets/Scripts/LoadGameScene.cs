@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LoadGameScene : MonoBehaviour {
 
@@ -11,7 +12,7 @@ public class LoadGameScene : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKey("m")){
-			Application.LoadLevel("game-scene");
+            SceneManager.LoadScene("game-scene");
 		}
 	}
 }
