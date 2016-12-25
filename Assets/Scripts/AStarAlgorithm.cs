@@ -17,7 +17,7 @@ namespace Assets.Scripts
         // Should call this
         public static void setMapNode(MapNode[][] _mapNode) {
             mapNode = _mapNode;
-            Debug.Log("Init Set Map Node : " + mapNode.Length + " - " + mapNode[0].Length);
+            //Debug.Log("Init Set Map Node : " + mapNode.Length + " - " + mapNode[0].Length);
 
         }
 
@@ -29,8 +29,8 @@ namespace Assets.Scripts
             currentNodeNeightbors.Clear();
             float g = 0.0f;
             float h = getHcostBetweenTwoNodes(startNode, goalNode);
-            Debug.Log("Start node : " + startNode.getIndexX() + "," + startNode.getIndexY());
-            Debug.Log("Goal node : " + goalNode.getIndexX() + "," + goalNode.getIndexY());
+            //Debug.Log("Start node : " + startNode.getIndexX() + "," + startNode.getIndexY());
+            //Debug.Log("Goal node : " + goalNode.getIndexX() + "," + goalNode.getIndexY());
             startNode.updateCost(g, h);
             openListNode.Add(startNode);
             MapNode currentNode = null;
@@ -41,7 +41,7 @@ namespace Assets.Scripts
 
                 if (currentNode == goalNode)
                 {
-                    Debug.Log("Find A Way");
+                    //Debug.Log("Find A Way");
                     BuildPathNode(goalNode);
                     return AiPathNode;
                     //break;
@@ -63,7 +63,7 @@ namespace Assets.Scripts
                     }
                 }
             }
-            Debug.Log("Fail to find A Way");
+            //Debug.Log("Fail to find A Way");
         return AiPathNode;
         }
         private static MapNode getOptimalNodeFromOpenList() {

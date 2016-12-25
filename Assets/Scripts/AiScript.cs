@@ -123,8 +123,8 @@ public class AiScript : MonoBehaviour {
                     float maxX = nextTargetCoordinat.x + 0.1f;
                     float minY = nextTargetCoordinat.y - 0.1f;
                     float maxY = nextTargetCoordinat.y + 0.1f;
-                    Debug.Log("Next node");
-                    Debug.Log("X1 = " + controller.transform.position.x + " , Y1 = " + controller.transform.position.z);
+                    //Debug.Log("Next node");
+                    //Debug.Log("X1 = " + controller.transform.position.x + " , Y1 = " + controller.transform.position.z);
                     walkingNodeIndex++;
                     setCurrentLocationAsStartNode();
                 }
@@ -134,7 +134,7 @@ public class AiScript : MonoBehaviour {
     }
     
     public void setCurrentLocationAsStartNode() {
-        Debug.Log("MapNode Length = " + mapNode.Length);
+        //Debug.Log("MapNode Length = " + mapNode.Length);
         int indexX = (int)Math.Round((transform.position.x - indexMap * mapNode.Length), MidpointRounding.AwayFromZero);
         int indexY = (int)Math.Round( transform.position.z, MidpointRounding.AwayFromZero);
         startMapNode = mapNode[indexY][indexX];
@@ -177,14 +177,14 @@ public class AiScript : MonoBehaviour {
     }
 
     void startIdle() {
-        Debug.Log("Start Idle");
+        //Debug.Log("Start Idle");
         mBehaviour  = AiBehaviour.idle;
         speedFactor = walkSpeedFactor;
         idleTime    = 0.0f;
         updateAnimation();
     }
     void startPatroling() {
-        Debug.Log("Start Patroling");
+        //Debug.Log("Start Patroling");
         mBehaviour  = AiBehaviour.patroling;
         speedFactor = walkSpeedFactor;
         idleTime = 0.0f;
@@ -195,7 +195,7 @@ public class AiScript : MonoBehaviour {
         updateAnimation();
     }
     void startChasing() {
-        Debug.Log("Start Chasing");
+        //Debug.Log("Start Chasing");
         mBehaviour  = AiBehaviour.chasing;
         speedFactor = runSpeedFactor;
         idleTime    = 0.0f;

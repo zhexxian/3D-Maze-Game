@@ -55,7 +55,6 @@ public class GlobalVariable
     public static int[] GetPlayerCoordinate()
     {
         float decimalValue = (float)((float)(MazeDatabase.GetMaze[1].GetLength(1))/2f)-(float)(Math.Truncate((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f));
-        Debug.Log(decimalValue);
         int a = (int)Math.Truncate((m_playerPosition.x+decimalValue) / MazeDatabase.GetMaze[1].GetLength(1));
         int x = (int)Math.Truncate((m_playerPosition.x+decimalValue) % MazeDatabase.GetMaze[1].GetLength(1));
         int z = (int)Math.Truncate(m_playerPosition.z+decimalValue);

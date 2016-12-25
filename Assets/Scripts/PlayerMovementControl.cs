@@ -105,8 +105,6 @@ public class PlayerMovementControl : MonoBehaviour {
                     var z = Input.GetAxis("Vertical") * getSpeedFactor();
                     var x = enableSideStep ? Input.GetAxis("Horizontal") * sideStepSpeed  : 0;
                     transform.Translate(x, 0, z);
-                    // Update position to global variablec
-                    GlobalVariable.PlayerPosition = transform.position;
                 }
             }
             else
@@ -120,7 +118,8 @@ public class PlayerMovementControl : MonoBehaviour {
                 updateAnimation();
             }
         }
-       
+        // Update position to global variable
+        GlobalVariable.PlayerPosition = transform.position;
     }
 
 }
