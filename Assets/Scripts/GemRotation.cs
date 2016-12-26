@@ -10,7 +10,7 @@ public class GemRotation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        gameObject.transform.Rotate(2, -2, 2);
+        gameObject.transform.Rotate(0, -2, 0);
 	}
 
     void OnCollisionEnter(Collision col)

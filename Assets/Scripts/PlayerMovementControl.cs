@@ -3,7 +3,6 @@ using System.Collections;
 
 public class PlayerMovementControl : MonoBehaviour
 {
-
     public static bool resetPlayer = false;
     // Public for GUI parameter input
     public float walkSpeedFactor = 2.0f;
@@ -42,7 +41,6 @@ public class PlayerMovementControl : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         mAnimator = GetComponent<Animator>();
-        GlobalVariable.CurrGemNumber = 0;
     }
 
     void updateAnimation()
@@ -72,6 +70,7 @@ public class PlayerMovementControl : MonoBehaviour
 
     void Update()
     {
+        if (GlobalVariable.onPauseGame) return;
         if (!readMap)
         {
             if (MazeDatabase.GetMaze[indexMap] != null)
@@ -129,6 +128,7 @@ public class PlayerMovementControl : MonoBehaviour
                 updateAnimation();
             }
         }
+
         // Update position to global variable
         GlobalVariable.PlayerPosition = transform.position;
         if (Input.GetKeyDown(KeyCode.LeftShift))

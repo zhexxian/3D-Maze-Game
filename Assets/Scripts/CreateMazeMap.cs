@@ -1,18 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement;
 
 public class CreateMazeMap : MonoBehaviour
 {
-
+    public static string gameObjectCubeName = "mapcube";
     public Material groundMaterial;
     public Material wallMaterial;
     GameObject mapcube = new GameObject();
 
+    public void unsetGameScene() {
+        GameObject[] gameSceneObjects = SceneManager.GetSceneByName("game-scene").GetRootGameObjects();
+        foreach (GameObject gameObj in gameSceneObjects)
+        {
+                gameObj.SetActive(false);
+        }
+    }
     // Use this for initialization
     void Start()
     {
-
+        unsetGameScene();
         GameObject[] plane = new GameObject[7];
         GameObject[][,] cube = new GameObject[7][,];
         //GameObject mapcube = new GameObject();
@@ -26,6 +34,7 @@ public class CreateMazeMap : MonoBehaviour
         //Front: 5
         //Back: 6
         mapcube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        mapcube.name = gameObjectCubeName;
         mapcube.transform.position = new Vector3(0, 0, 0);
         mapcube.transform.localScale = new Vector3(20, 20, 20);
         for (int a = 1; a <= 6; a++)

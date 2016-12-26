@@ -5,6 +5,7 @@ using Assets.Scripts;
 
 public class GlobalVariable
 {
+    private static bool _onPauseGame = false;
     private static Vector3 m_playerPosition;
     private static int _maxGemNumber;
     private static int _currGemNumber;
@@ -22,6 +23,12 @@ public class GlobalVariable
             DataControl.mGameData.unlockedLevel = _unlockedLevel;
             DataControl.Save();
         }
+    }
+
+    public static bool onPauseGame
+    {
+        get { return _onPauseGame; }
+        set { _onPauseGame = value; }
     }
 
     public static int IndexMap

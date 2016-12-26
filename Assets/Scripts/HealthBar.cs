@@ -11,6 +11,7 @@ public class HealthBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (GlobalVariable.onPauseGame) return;
         string text;
         if (gameObject.name == "Timer")
         {
