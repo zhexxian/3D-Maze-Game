@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class PlayerMovementControl : MonoBehaviour {
-
     public static bool resetPlayer = false;
     // Public for GUI parameter input
     public float walkSpeedFactor = 2.0f;
@@ -66,6 +65,7 @@ public class PlayerMovementControl : MonoBehaviour {
     }
     
     void Update () {
+        if (GlobalVariable.onPauseGame) return;
         if (!readMap)
         {
             if (MazeDatabase.GetMaze[indexMap] != null)
