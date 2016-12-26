@@ -12,6 +12,8 @@ public class GlobalVariable
     private static int _indexMap = 0; // 0 - 5
     private static int _unlockedLevel = 1; // 1 - 3
 
+    
+
     public static int UnlockedLevel
     {
         get { return _unlockedLevel; }
