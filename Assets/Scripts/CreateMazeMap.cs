@@ -8,16 +8,18 @@ public class CreateMazeMap : MonoBehaviour
     public static string gameObjectCubeName = "mapcube";
     public Material groundMaterial;
     public Material wallMaterial;
-	public Material playerMaterial;
-	public Material goalMaterial;
+    public Material playerMaterial;
+    public Material goalMaterial;
     GameObject mapcube = new GameObject();
-	int[] playerCoordinates; //a, x, z
+    int[] playerCoordinates; //a, x, z
+    int playercurrentside;
 
-    public void unsetGameScene() {
+    public void unsetGameScene()
+    {
         GameObject[] gameSceneObjects = SceneManager.GetSceneByName("game-scene").GetRootGameObjects();
         foreach (GameObject gameObj in gameSceneObjects)
         {
-                gameObj.SetActive(false);
+            gameObj.SetActive(false);
         }
     }
     // Use this for initialization
@@ -62,57 +64,59 @@ public class CreateMazeMap : MonoBehaviour
                 for (int x = 0; x < MazeDatabase.GetMaze[a].GetLength(1); x++)
                 {
 
-					if (MazeDatabase.GetMaze [a] [y, x] == "#") {
-						cube [a] [y, x] = GameObject.CreatePrimitive (PrimitiveType.Cube);
+                    if (MazeDatabase.GetMaze[a][y, x] == "#")
+                    {
+                        cube[a][y, x] = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-						cube [a] [y, x].transform.position = new Vector3 (x - ((float)(MazeDatabase.GetMaze [a].GetLength (1)) / 2.0f) + 0.5f, 0.5f, y - ((float)(MazeDatabase.GetMaze [a].GetLength (0)) / 2.0f) + 0.5f);
-						cube [a] [y, x].transform.localScale = new Vector3 (1, 1, 1);
-						cube [a] [y, x].transform.SetParent (plane [a].transform, true);
+                        cube[a][y, x].transform.position = new Vector3(x - ((float)(MazeDatabase.GetMaze[a].GetLength(1)) / 2.0f) + 0.5f, 0.5f, y - ((float)(MazeDatabase.GetMaze[a].GetLength(0)) / 2.0f) + 0.5f);
+                        cube[a][y, x].transform.localScale = new Vector3(1, 1, 1);
+                        cube[a][y, x].transform.SetParent(plane[a].transform, true);
 
-						Material[] wallMaterialArr = new Material[1];
-						wallMaterialArr [0] = wallMaterial;
-						cube [a] [y, x].GetComponent<MeshRenderer> ().materials = wallMaterialArr;
+                        Material[] wallMaterialArr = new Material[1];
+                        wallMaterialArr[0] = wallMaterial;
+                        cube[a][y, x].GetComponent<MeshRenderer>().materials = wallMaterialArr;
 
-						cubeCollider [a] [y, x] = (BoxCollider)cube [a] [y, x].AddComponent (typeof(BoxCollider));
-						cubeCollider [a] [y, x].center = Vector3.zero;
+                        cubeCollider[a][y, x] = (BoxCollider)cube[a][y, x].AddComponent(typeof(BoxCollider));
+                        cubeCollider[a][y, x].center = Vector3.zero;
+                    }
+                    else if (MazeDatabase.GetMaze[a][y, x] == "F")
+                    {
+                        print("[F] " + "a: " + a + " y: " + y + " x: " + x);
+                        //this is the finish point
+                        cube[a][y, x] = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-					} else if (MazeDatabase.GetMaze [a] [y, x] == "F") {
-						print ("[F] " + "a: " + a + " y: " + y + " x: " + x);
-						//this is the finish point
-						cube [a] [y, x] = GameObject.CreatePrimitive (PrimitiveType.Cube);
+                        cube[a][y, x].transform.position = new Vector3(x - ((float)(MazeDatabase.GetMaze[a].GetLength(1)) / 2.0f) + 0.5f, 0.5f, y - ((float)(MazeDatabase.GetMaze[a].GetLength(0)) / 2.0f) + 0.5f);
+                        cube[a][y, x].transform.localScale = new Vector3(1, 1, 1);
+                        cube[a][y, x].transform.SetParent(plane[a].transform, true);
 
-						cube [a] [y, x].transform.position = new Vector3 (x - ((float)(MazeDatabase.GetMaze [a].GetLength (1)) / 2.0f) + 0.5f, 0.5f, y - ((float)(MazeDatabase.GetMaze [a].GetLength (0)) / 2.0f) + 0.5f);
-						cube [a] [y, x].transform.localScale = new Vector3 (1, 1, 1);
-						cube [a] [y, x].transform.SetParent (plane [a].transform, true);
+                        Material[] goalMaterialArr = new Material[1];
+                        goalMaterialArr[0] = goalMaterial;
+                        cube[a][y, x].GetComponent<MeshRenderer>().materials = goalMaterialArr;
 
-						Material[] goalMaterialArr = new Material[1];
-						goalMaterialArr [0] = goalMaterial;
-						cube [a] [y, x].GetComponent<MeshRenderer> ().materials = goalMaterialArr;
-
-						cubeCollider [a] [y, x] = (BoxCollider)cube [a] [y, x].AddComponent (typeof(BoxCollider));
-						cubeCollider [a] [y, x].center = Vector3.zero;
-					}
+                        cubeCollider[a][y, x] = (BoxCollider)cube[a][y, x].AddComponent(typeof(BoxCollider));
+                        cubeCollider[a][y, x].center = Vector3.zero;
+                    }
 
                 }
             }
         }
-		playerCoordinates = GlobalVariable.GetPlayerCoordinate ();
-		int aa = playerCoordinates [0]; 
-		int xx = playerCoordinates [1];
-		int yy = playerCoordinates [2];
-		print ("aa: "+aa+" yy: "+yy+" xx: "+xx);
-		cube [aa] [yy, xx] = GameObject.CreatePrimitive (PrimitiveType.Sphere);
+        playerCoordinates = GlobalVariable.GetPlayerCoordinate();
+        int aa = playerCoordinates[0];
+        int xx = playerCoordinates[1];
+        int yy = playerCoordinates[2];
+        //print ("aa: "+aa+" yy: "+yy+" xx: "+xx);
+        cube[aa][yy, xx] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-		cube [aa] [yy, xx].transform.position = new Vector3 (xx - ((float)(MazeDatabase.GetMaze [aa].GetLength (1)) / 2.0f) + 0.5f, 0.5f, yy - ((float)(MazeDatabase.GetMaze [aa].GetLength (0)) / 2.0f) + 0.5f);
-		cube [aa] [yy, xx].transform.localScale = new Vector3 (1, 1, 1);
-		cube [aa] [yy, xx].transform.SetParent (plane [aa].transform, true);
+        cube[aa][yy, xx].transform.position = new Vector3(xx - ((float)(MazeDatabase.GetMaze[aa].GetLength(1)) / 2.0f) + 0.5f, 0.5f, yy - ((float)(MazeDatabase.GetMaze[aa].GetLength(0)) / 2.0f) + 0.5f);
+        cube[aa][yy, xx].transform.localScale = new Vector3(1, 1, 1);
+        cube[aa][yy, xx].transform.SetParent(plane[aa].transform, true);
 
-		Material[] playerMaterialArr = new Material[1];
-		playerMaterialArr [0] = playerMaterial;
-		cube [aa] [yy, xx].GetComponent<MeshRenderer> ().materials = playerMaterialArr;
+        Material[] playerMaterialArr = new Material[1];
+        playerMaterialArr[0] = playerMaterial;
+        cube[aa][yy, xx].GetComponent<MeshRenderer>().materials = playerMaterialArr;
 
-		cubeCollider [aa] [yy, xx] = (BoxCollider)cube [aa] [yy, xx].AddComponent (typeof(BoxCollider));
-		cubeCollider [aa] [yy, xx].center = Vector3.zero;
+        cubeCollider[aa][yy, xx] = (BoxCollider)cube[aa][yy, xx].AddComponent(typeof(BoxCollider));
+        cubeCollider[aa][yy, xx].center = Vector3.zero;
 
 
         //Bottom
@@ -140,25 +144,51 @@ public class CreateMazeMap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 cameraup = GameObject.Find("Main Camera").transform.up;
+        Vector3 cameraright = GameObject.Find("Main Camera").transform.right;
         if (Input.GetKey("a"))
         {
-            mapcube.transform.Rotate(new Vector3(0, 0, -2));
+            mapcube.transform.Rotate(new Vector3(0,0,-2),Space.World);
         }
         if (Input.GetKey("d"))
         {
-            mapcube.transform.Rotate(new Vector3(0, 0, 2));
+            mapcube.transform.Rotate(new Vector3(0, 0, 2), Space.World);
         }
         if (Input.GetKey("s"))
         {
-            mapcube.transform.Rotate(new Vector3(-2, 0, 0));
+            mapcube.transform.Rotate(new Vector3(-2, 0, 0), Space.World);
         }
         if (Input.GetKey("w"))
         {
-            mapcube.transform.Rotate(new Vector3(2, 0, 0));
+            mapcube.transform.Rotate(new Vector3(2, 0, 0), Space.World);
         }
         if (Input.GetKey("space"))
         {
-            mapcube.transform.rotation = new Quaternion(0, 0, 0, 1);
+            int a = GlobalVariable.GetPlayerCoordinate()[0];
+            if (a == 1)
+            {
+                mapcube.transform.localEulerAngles = new Vector3(0, 0, 0);
+            }
+            if (a == 2)
+            {
+                mapcube.transform.localEulerAngles = new Vector3(0, 0, -90);
+            }
+            if (a == 3)
+            {
+                mapcube.transform.localEulerAngles = new Vector3(0, 0, 180);
+            }
+            if (a == 4)
+            {
+                mapcube.transform.localEulerAngles = new Vector3(0, 0, 90);
+            }
+            if (a == 5)
+            {
+                mapcube.transform.localEulerAngles = new Vector3(90, 0, 0);
+            }
+            if (a == 6)
+            {
+                mapcube.transform.localEulerAngles = new Vector3(-90, 0, 0);
+            }
         }
     }
 }
