@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\CreateMaze.cs" />
     <Compile Include="Assets\Scripts\CreateMazeMap.cs" />
     <Compile Include="Assets\Scripts\DataControl.cs" />
+    <Compile Include="Assets\Scripts\Fading.cs" />
     <Compile Include="Assets\Scripts\FinishPointRotation.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />
     <Compile Include="Assets\Scripts\GemRotation.cs" />

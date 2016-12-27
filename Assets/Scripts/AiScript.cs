@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System;
 using Assets.Scripts;
 
-public class AiScript : MonoBehaviour {
+public class AiScript : MonoBehaviour
+{
 
     public int monster_id;
     public float radius = 0.01f;
@@ -14,17 +15,20 @@ public class AiScript : MonoBehaviour {
     private CharacterController controller;
 
     // Public for GUI parameter input
-    public float maxIdleTime        = 3.0f;
-    public float seenRange          = 2.0f;
-    public float walkSpeedFactor    = 2.0f;
-    public float runSpeedFactor     = 4.0f;
+    public float maxIdleTime = 3.0f;
+    public float maxChasingTime = 5.0f;
+    public float seenRange = 2.0f;
+    public float walkSpeedFactor = 2.0f;
+    public float runSpeedFactor = 2.0f;
+    public float catchRange = 0.72f;
 
-    private float speedFactor       = 2.0f;
-    private float idleTime          = 0.0f;
-    private int indexMap            = 1;  // 1-6 
-    private int movingState         = 0;  // 0 - iddle   || 1 - walking   || 2 - running
-    private int faceDirection       = 2;  // 0 - camera direction   || 1 - right direction   || 2 - forward direction   || 3 - left direction
-    private int walkingNodeIndex    = 0;
+    private float speedFactor = 2.0f;
+    private float idleTime = 0.0f;
+    private float rechasingTime = 0.0f;
+    private int indexMap = 1;  // 1-6 
+    private int movingState = 0;  // 0 - iddle   || 1 - walking   || 2 - running
+    private int faceDirection = 2;  // 0 - camera direction   || 1 - right direction   || 2 - forward direction   || 3 - left direction
+    private int walkingNodeIndex = 0;
 
     private Vector2 nextTargetCoordinat;
 
@@ -32,7 +36,7 @@ public class AiScript : MonoBehaviour {
     private MapNode nextTargetMapNode;  // Goal Posisition That AI should Go
     private List<MapNode> mWalkingCoordinateNode; // For Storing Which Node of Map that should passed
 
-    enum AiBehaviour{chasing,patroling,idle};
+    enum AiBehaviour { chasing, patroling, idle };
     private AiBehaviour mBehaviour;
     private bool haveReadTheMap;
     private GameObject mainPlayer;
@@ -40,21 +44,23 @@ public class AiScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        mainPlayer  = GameObject.Find("MainPlayer");
-        mBehaviour  = AiBehaviour.idle;
-        controller  = GetComponent<CharacterController>();
-        mAnimation  = GetComponent<Animation>();
-        haveReadTheMap  = false;
+        mainPlayer = GameObject.Find("MainPlayer");
+        mBehaviour = AiBehaviour.idle;
+        controller = GetComponent<CharacterController>();
+        mAnimation = GetComponent<Animation>();
+        rechasingTime = maxChasingTime;
+        haveReadTheMap = false;
         mAnimation.wrapMode = WrapMode.Loop;
         mWalkingCoordinateNode = new List<MapNode>();
     }
 
     public float getSpeedFactor()
     {
-        return (speedFactor * Time.deltaTime); 
+        return (speedFactor * Time.deltaTime);
     }
 
-    public void randomNextCordinate() {
+    public void randomNextCordinate()
+    {
         //nextTargetKoordinat = new Vector2(Random.Range(30f,40f), Random.Range(-5f, 5f));
         int x = 0;
         int y = 0;
@@ -83,22 +89,23 @@ public class AiScript : MonoBehaviour {
         return faceDirection;
     }
 
-    public bool isSeenPlayer() {
+    public bool isSeenPlayer()
+    {
         // if location player and ai within in xx range and yy range
-        
-        //setCurrentLocationAsStartNode();
-        //float playerX = mainPlayer.transform.position.x;
-        //float playerZ = mainPlayer.transform.position.z;
-        //int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
-        //int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
-        return false;
-        //return (indexX >= startMapNode.getIndexX() - seenRange &&
-        //    indexX <= startMapNode.getIndexX() + seenRange &&
-        //    indexY >= startMapNode.getIndexY() - seenRange &&
-        //    indexY <= startMapNode.getIndexY() + seenRange);
+        setCurrentLocationAsStartNode();
+        float playerX = mainPlayer.transform.position.x;
+        float playerZ = mainPlayer.transform.position.z;
+        int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
+        int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
+        return (indexX >= startMapNode.getIndexX() - seenRange &&
+            indexX <= startMapNode.getIndexX() + seenRange &&
+            indexY >= startMapNode.getIndexY() - seenRange &&
+            indexY <= startMapNode.getIndexY() + seenRange &&
+            MazeDatabase.GetMaze[indexMap][indexY, indexX] != MazeGenerator.MAZESTART);
     }
 
-    public void moving() {
+    public void moving()
+    {
         if (mWalkingCoordinateNode.Count > 0)
         {
             if (walkingNodeIndex < mWalkingCoordinateNode.Count)
@@ -132,19 +139,21 @@ public class AiScript : MonoBehaviour {
 
         }
     }
-    
-    public void setCurrentLocationAsStartNode() {
+
+    public void setCurrentLocationAsStartNode()
+    {
         //Debug.Log("MapNode Length = " + mapNode.Length);
         int indexX = (int)Math.Round((transform.position.x - indexMap * mapNode.Length), MidpointRounding.AwayFromZero);
-        int indexY = (int)Math.Round( transform.position.z, MidpointRounding.AwayFromZero);
+        int indexY = (int)Math.Round(transform.position.z, MidpointRounding.AwayFromZero);
         startMapNode = mapNode[indexY][indexX];
     }
 
-    public void setMainPlayerLocationAsTargetNode() {
+    public void setMainPlayerLocationAsTargetNode()
+    {
         float playerX = mainPlayer.transform.position.x;
         float playerZ = mainPlayer.transform.position.z;
         int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
-        int indexY = (int)Math.Round( playerZ, MidpointRounding.AwayFromZero);
+        int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
         nextTargetMapNode = mapNode[indexY][indexX];
     }
 
@@ -154,38 +163,43 @@ public class AiScript : MonoBehaviour {
         {
             case AiBehaviour.idle:
                 //mAnimator.Play("Idle", -1, 0f); break;
-                mAnimation.Play("idle");break;
+                mAnimation.Play("idle"); break;
             case AiBehaviour.patroling:
                 //mAnimator.Play("Walk", -1, 0f); break;
                 mAnimation.Play("walk"); break;
             case AiBehaviour.chasing:
                 //mAnimator.Play("Run", -1, 0f); break;
-                mAnimation.Play("run"); break;
+                //mAnimation.Play("run"); break;
+                mAnimation.Play("walk"); break;
         }
     }
 
     void initMapNode()
     {
         mapNode = new MapNode[MazeDatabase.GetMaze[indexMap].GetLength(0)][];
-        for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++){
+        for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++)
+        {
             mapNode[y] = new MapNode[MazeDatabase.GetMaze[indexMap].GetLength(1)];
-            for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++){
-                mapNode[y][x] = new MapNode(x,y,indexMap);
+            for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++)
+            {
+                mapNode[y][x] = new MapNode(x, y, indexMap);
             }
         }
         AStarAlgorithm.setMapNode(mapNode);
     }
 
-    void startIdle() {
+    void startIdle()
+    {
         //Debug.Log("Start Idle");
-        mBehaviour  = AiBehaviour.idle;
+        mBehaviour = AiBehaviour.idle;
         speedFactor = walkSpeedFactor;
-        idleTime    = 0.0f;
+        idleTime = 0.0f;
         updateAnimation();
     }
-    void startPatroling() {
+    void startPatroling()
+    {
         //Debug.Log("Start Patroling");
-        mBehaviour  = AiBehaviour.patroling;
+        mBehaviour = AiBehaviour.patroling;
         speedFactor = walkSpeedFactor;
         idleTime = 0.0f;
         setCurrentLocationAsStartNode();
@@ -194,11 +208,13 @@ public class AiScript : MonoBehaviour {
         mWalkingCoordinateNode = AStarAlgorithm.computePath(startMapNode, nextTargetMapNode);
         updateAnimation();
     }
-    void startChasing() {
+    void startChasing()
+    {
         //Debug.Log("Start Chasing");
-        mBehaviour  = AiBehaviour.chasing;
+        mBehaviour = AiBehaviour.chasing;
         speedFactor = runSpeedFactor;
-        idleTime    = 0.0f;
+        idleTime = 0.0f;
+        rechasingTime = maxChasingTime;
         setCurrentLocationAsStartNode();
         setMainPlayerLocationAsTargetNode();
         walkingNodeIndex = 0;
@@ -210,19 +226,19 @@ public class AiScript : MonoBehaviour {
         // read name of AI to decide index map => 1 - 6
         int xAI = 0;
         int yAI = 0;
-        while (true) {
+        while (true)
+        {
             xAI = UnityEngine.Random.Range(0, MazeDatabase.GetMaze[indexMap].GetLength(0));
             yAI = UnityEngine.Random.Range(0, MazeDatabase.GetMaze[indexMap].GetLength(1));
             if (MazeDatabase.GetMaze[indexMap][yAI, xAI] == MazeGenerator.MAZEPATH)
             {
                 transform.position = new Vector3(xAI + indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0), 0, yAI);
-                return ;
+                return;
             }
-        } 
+        }
     }
-    void testingMovementManual() {
-        if(Input.GetKey("i"))transform.Translate(0.0f, 0, getSpeedFactor());
-        if (Input.GetKey("k")) transform.Translate(0.0f, 0, -getSpeedFactor());
+    void testingMovementManual()
+    {
         if (Input.GetKey("r")) resetPlayer();
     }
     // Update is called once per frame
@@ -240,47 +256,52 @@ public class AiScript : MonoBehaviour {
         }
         else
         {
-            testingMovementManual();
+            //testingMovementManual();
+            if (checkCatchPlayer())
+            {
+                Debug.Log("Catch Player");
+                startIdle();
+                resetPlayer();
+            }
             if (isSeenPlayer())
             {
-                switch (mBehaviour) {
+                switch (mBehaviour)
+                {
                     case AiBehaviour.chasing:
-                        if (startMapNode == nextTargetMapNode)
+                        if (rechasingTime <= 0 || startMapNode == nextTargetMapNode)
                         {
-                            // reaching the target location, change behaviour
-                            startIdle();
-                            // reset the player and decrease the player gem?
-                            resetPlayer();
+                            startChasing();
                         }
                         else
                         {
                             moving();
+                            rechasingTime -= Time.deltaTime;
                         }
                         break;
                     default:
                         startChasing();
                         break;
                 }
-               
+
             }
             else
             {
                 // Do the patroling and idle
                 switch (mBehaviour)
                 {
-                    case AiBehaviour.idle       :
+                    case AiBehaviour.idle:
                         if (idleTime >= maxIdleTime) startPatroling();
                         else idleTime += Time.deltaTime; // Iddle 
                         break;
-                    case AiBehaviour.patroling  :
-                    case AiBehaviour.chasing    :
-                        if (startMapNode == nextTargetMapNode)startIdle();
+                    case AiBehaviour.patroling:
+                    case AiBehaviour.chasing:
+                        if (startMapNode == nextTargetMapNode) startIdle();
                         else moving();
                         break;
                 }
             }
         }
-        
+
 
 
     }
@@ -288,7 +309,23 @@ public class AiScript : MonoBehaviour {
     void resetPlayer()
     {
         // Decrease Gem into half
-        GlobalVariable.CurrGemNumber = GlobalVariable.CurrGemNumber > 1?(int)Math.Round((double)(GlobalVariable.CurrGemNumber/2), MidpointRounding.AwayFromZero):0;
+        GlobalVariable.CurrGemNumber = GlobalVariable.CurrGemNumber > 1 ? (int)Math.Round((double)(GlobalVariable.CurrGemNumber / 2), MidpointRounding.AwayFromZero) : 0;
         PlayerMovementControl.resetPlayer = true;
+        // generate gem
+    }
+
+    bool checkCatchPlayer()
+    {
+        float playerX = mainPlayer.transform.position.x;
+        float playerZ = mainPlayer.transform.position.z;
+        float distanceX = playerX - transform.position.x;
+        float distanceZ = playerZ - transform.position.z;
+        distanceX = distanceX < 0 ? -distanceX : distanceX;
+        distanceZ = distanceZ < 0 ? -distanceZ : distanceZ;
+        int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
+        int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
+        if (distanceX < 1 && distanceZ < 1)
+            Debug.Log("distance : " + distanceX + "," + distanceZ);
+        return (distanceX < catchRange && distanceZ < catchRange && MazeDatabase.GetMaze[indexMap][indexY, indexX] != MazeGenerator.MAZESTART);
     }
 }

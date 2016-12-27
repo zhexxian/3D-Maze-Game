@@ -26,6 +26,11 @@ public class PlayerMovementControl : MonoBehaviour
         return (speedFactor * Time.deltaTime);
     }
 
+    public float getSideStepSpeedFactor()
+    {
+        return (sideStepSpeed * Time.deltaTime);
+    }
+
     public bool isMovementControlKey(int state)
     {
         // state = 0 -> moving ( W / S )
@@ -111,11 +116,13 @@ public class PlayerMovementControl : MonoBehaviour
                 }
                 if (isMovementControlKey(0))
                 {
-                    
-                    movingState = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? 2 : 1;
-                    speedFactor = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? runSpeedFactor : walkSpeedFactor;
+
+                    //movingState = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? 2 : 1;
+                    movingState = 1;
+                    //speedFactor = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? runSpeedFactor : walkSpeedFactor;
+                    speedFactor = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? walkSpeedFactor : walkSpeedFactor;
                     var z = Input.GetAxis("Vertical") * getSpeedFactor();
-                    var x = enableSideStep ? Input.GetAxis("Horizontal") * sideStepSpeed : 0;
+                    var x = enableSideStep ? Input.GetAxis("Horizontal") * getSideStepSpeedFactor() : 0;
                     //transform.Translate(x, 0, z);
                     
                     gameObject.GetComponent<CharacterController>().Move(transform.TransformDirection(new Vector3(x,0,z)));
