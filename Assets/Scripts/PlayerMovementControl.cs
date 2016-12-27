@@ -118,7 +118,8 @@ public class PlayerMovementControl : MonoBehaviour
                     var x = enableSideStep ? Input.GetAxis("Horizontal") * sideStepSpeed : 0;
                     //transform.Translate(x, 0, z);
                     
-                    gameObject.GetComponent<CharacterController>().Move(transform.TransformDirection(new Vector3(x,0,z)));
+                    gameObject.GetComponent<CharacterController>().Move(transform.TransformDirection(new Vector3(x,-0.1f,z)));
+                    gameObject.GetComponent<CharacterController>().Move(new Vector3(0, -0.01f, 0));
                 }
             }
             else

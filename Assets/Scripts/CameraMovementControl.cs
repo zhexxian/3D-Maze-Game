@@ -7,6 +7,7 @@ public class CameraMovementControl : MonoBehaviour {
     public GameObject target;
     private bool readMap = false;
     public float damping = 1;
+    public float xrot = 15;
     public Vector3 offset = new Vector3(0, 2, -2);
 
     // Use this for initialization
@@ -33,7 +34,7 @@ public class CameraMovementControl : MonoBehaviour {
             transform.position = target.transform.position;
             transform.eulerAngles = new Vector3(0, target.transform.eulerAngles.y, 0);
             transform.Translate(offset);
-            transform.eulerAngles = new Vector3(35, target.transform.eulerAngles.y, 0);
+            transform.eulerAngles = new Vector3(xrot, target.transform.eulerAngles.y, 0);
         }
         
     }
