@@ -298,7 +298,7 @@ public class MazeGenerator
             int homeyc = (2 * homey + homeheight) / 2;
         }
         //set finish line
-        bool finishlinefound = false;
+		bool finishlinefound = !p_hasfinishpoint;
         double distanceMaze = (Math.Sqrt(mazewidth * mazewidth + mazeheight * mazeheight)) * FINISHDISTANCE;
         //Console.WriteLine(distanceMaze.ToString());
         while (!finishlinefound)

@@ -15,7 +15,6 @@ public class PlayerMovementControl : MonoBehaviour
     private bool readMap = false;
     private int indexMap = 1; // 1-6 
 
-
     public Animator mAnimator;
     private CharacterController controller;
     private int movingState = 0;    // 0 - iddle   || 1 - walking   || 2 - running
@@ -131,7 +130,7 @@ public class PlayerMovementControl : MonoBehaviour
 
         // Update position to global variable
         GlobalVariable.PlayerPosition = transform.position;
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             int[] playerPosition = GlobalVariable.GetPlayerCoordinate();
             int posA = playerPosition[0];
@@ -141,10 +140,20 @@ public class PlayerMovementControl : MonoBehaviour
             int[] teleportPoint = MazeDatabase.GetTeleportPoint(posA, posZ, posX);
             if (teleportPoint != null)
             {
-                int des_a = teleportPoint[0];
-                int des_z = teleportPoint[1];
-                int des_x = teleportPoint[2];
-                gameObject.transform.position = new Vector3(des_a * MazeDatabase.GetMaze[des_a].GetLength(1) + des_x, 0, des_z);
+				float fadeTime = GetComponent<Fading>().BeginFade (1);
+				float startTime = Time.realtimeSinceStartup;
+				while (true) {
+					//print ("teleporting")
+					if (Time.realtimeSinceStartup - startTime > 1) {
+						int des_a = teleportPoint [0];
+						int des_z = teleportPoint [1];
+						int des_x = teleportPoint [2];
+						gameObject.transform.position = new Vector3 (des_a * MazeDatabase.GetMaze [des_a].GetLength (1) + des_x, 0, des_z);
+						break;
+					}
+				}
+
+				GetComponent<Fading>().BeginFade (-1);
             }
         }
     }
