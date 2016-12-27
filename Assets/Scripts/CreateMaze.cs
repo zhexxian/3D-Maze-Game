@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CreateMaze : MonoBehaviour
 {
+    public float wallHeight;
     public Material groundMaterial;
     public Material wallMaterial;
     public Material MaterialFloor;
@@ -64,8 +65,8 @@ public class CreateMaze : MonoBehaviour
                         {
                             cube[a][y, x] = (GameObject)Instantiate(PrefabWall);
 
-                            cube[a][y, x].transform.position = new Vector3(x + a * MazeDatabase.GetMaze[a].GetLength(0), 0.5f, y);
-                            cube[a][y, x].transform.localScale = new Vector3(1, 1, 1);
+                            cube[a][y, x].transform.position = new Vector3(x + a * MazeDatabase.GetMaze[a].GetLength(0), wallHeight/2f, y);
+                            cube[a][y, x].transform.localScale = new Vector3(1, wallHeight, 1);
                             cube[a][y, x].transform.SetParent(plane[a].transform, true);
 
                             //Material[] wallMaterialArr = new Material[1];

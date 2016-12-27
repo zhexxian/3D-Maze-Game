@@ -19,6 +19,7 @@ public class PlayerMovementControl : MonoBehaviour
     private CharacterController controller;
     private int movingState = 0;    // 0 - iddle   || 1 - walking   || 2 - running
     private int prevMovingState = 0;
+    private bool onCollision;
 
     public float getSpeedFactor()
     {
@@ -38,6 +39,7 @@ public class PlayerMovementControl : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        onCollision = false;
         controller = GetComponent<CharacterController>();
         mAnimator = GetComponent<Animator>();
     }
@@ -109,11 +111,14 @@ public class PlayerMovementControl : MonoBehaviour
                 }
                 if (isMovementControlKey(0))
                 {
+                    
                     movingState = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? 2 : 1;
                     speedFactor = Input.GetKey("space") && ((Input.GetKey("w") || Input.GetKey("up"))) ? runSpeedFactor : walkSpeedFactor;
                     var z = Input.GetAxis("Vertical") * getSpeedFactor();
                     var x = enableSideStep ? Input.GetAxis("Horizontal") * sideStepSpeed : 0;
-                    transform.Translate(x, 0, z);
+                    //transform.Translate(x, 0, z);
+                    
+                    gameObject.GetComponent<CharacterController>().Move(transform.TransformDirection(new Vector3(x,0,z)));
                 }
             }
             else
@@ -129,7 +134,6 @@ public class PlayerMovementControl : MonoBehaviour
         }
 
         // Update position to global variable
-        GlobalVariable.PlayerPosition = transform.position;
         if (Input.GetKeyDown(KeyCode.T))
         {
             int[] playerPosition = GlobalVariable.GetPlayerCoordinate();
@@ -140,21 +144,24 @@ public class PlayerMovementControl : MonoBehaviour
             int[] teleportPoint = MazeDatabase.GetTeleportPoint(posA, posZ, posX);
             if (teleportPoint != null)
             {
-				float fadeTime = GetComponent<Fading>().BeginFade (1);
-				float startTime = Time.realtimeSinceStartup;
-				while (true) {
-					//print ("teleporting")
-					if (Time.realtimeSinceStartup - startTime > 1) {
-						int des_a = teleportPoint [0];
-						int des_z = teleportPoint [1];
-						int des_x = teleportPoint [2];
-						gameObject.transform.position = new Vector3 (des_a * MazeDatabase.GetMaze [des_a].GetLength (1) + des_x, 0, des_z);
-						break;
-					}
-				}
+                float fadeTime = GetComponent<Fading>().BeginFade(1);
+                float startTime = Time.realtimeSinceStartup;
+                while (true)
+                {
+                    //print ("teleporting")
+                    if (Time.realtimeSinceStartup - startTime > 1)
+                    {
+                        int des_a = teleportPoint[0];
+                        int des_z = teleportPoint[1];
+                        int des_x = teleportPoint[2];
+                        gameObject.transform.position = new Vector3(des_a * MazeDatabase.GetMaze[des_a].GetLength(1) + des_x, 0, des_z);
+                        break;
+                    }
+                }
 
-				GetComponent<Fading>().BeginFade (-1);
+                GetComponent<Fading>().BeginFade(-1);
             }
         }
+        GlobalVariable.PlayerPosition = this.transform.localPosition;
     }
 }
