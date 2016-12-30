@@ -139,6 +139,32 @@ public class CreateMazeMap : MonoBehaviour
         plane[4].transform.Rotate(new Vector3(-180, 0, 90));
         plane[5].transform.Rotate(new Vector3(90, -90, -90));
         plane[6].transform.Rotate(new Vector3(-90, 0, 0));
+
+		int aaa = GlobalVariable.GetPlayerCoordinate()[0];
+		if (aaa == 1)
+		{
+			mapcube.transform.localEulerAngles = new Vector3(0, 0, 0);
+		}
+		if (aaa == 2)
+		{
+			mapcube.transform.localEulerAngles = new Vector3(0, 0, -90);
+		}
+		if (aaa == 3)
+		{
+			mapcube.transform.localEulerAngles = new Vector3(0, 0, 180);
+		}
+		if (aaa == 4)
+		{
+			mapcube.transform.localEulerAngles = new Vector3(0, 0, 90);
+		}
+		if (aaa == 5)
+		{
+			mapcube.transform.localEulerAngles = new Vector3(90, 0, 0);
+		}
+		if (aaa == 6)
+		{
+			mapcube.transform.localEulerAngles = new Vector3(-90, 0, 0);
+		}
     }
 
     // Update is called once per frame
