@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class HealthBar : MonoBehaviour {
-
+	private float gameTimeInMinutes = 5;
 	// Use this for initialization
 	void Start () {
 	
@@ -16,7 +16,11 @@ public class HealthBar : MonoBehaviour {
         if (gameObject.name == "Timer")
         {
             float timeSinceStart = Time.time;
-            text = string.Format("{0}:{1:00}", (int)timeSinceStart / 60, (int)timeSinceStart % 60);
+			float timeRemaining = gameTimeInMinutes * 60 - timeSinceStart;
+			if (timeRemaining < 0) {
+				timeRemaining = 0;
+			}
+			text = string.Format("{0}:{1:00}", (int)timeRemaining / 60, (int)timeRemaining % 60);
         }
         else if (gameObject.name == "Level")
         {
