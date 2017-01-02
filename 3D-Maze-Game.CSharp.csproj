@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\GemRotation.cs" />
     <Compile Include="Assets\Scripts\GlobalVariable.cs" />
     <Compile Include="Assets\Scripts\HealthBar.cs" />
+    <Compile Include="Assets\Scripts\IntroductionStory.cs" />
     <Compile Include="Assets\Scripts\LoadGameScene.cs" />
     <Compile Include="Assets\Scripts\LoadMapScene.cs" />
     <Compile Include="Assets\Scripts\MainButton.cs" />

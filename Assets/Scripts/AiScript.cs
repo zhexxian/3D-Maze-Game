@@ -247,7 +247,7 @@ public class AiScript : MonoBehaviour
         if (GlobalVariable.onPauseGame) return;
         if (!haveReadTheMap)
         {   // Try to read the map
-            if (MazeDatabase.GetMaze[indexMap] != null)
+            if (MazeDatabase.GetMaze[1] != null)
             {
                 haveReadTheMap = true;
                 initMapNode();
@@ -256,6 +256,13 @@ public class AiScript : MonoBehaviour
         }
         else
         {
+            if (indexMap != GlobalVariable.getIndexMap()) {
+                // Realocate Ai to the new location in the new map side
+                initMapNode();
+                placeAIInStartPosition();
+                startIdle();
+            }
+            indexMap = GlobalVariable.getIndexMap();
             //testingMovementManual();
             if (checkCatchPlayer())
             {

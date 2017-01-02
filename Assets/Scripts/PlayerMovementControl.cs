@@ -61,13 +61,14 @@ public class PlayerMovementControl : MonoBehaviour
 
     void placePlayerInStartPosition()
     {
-        for (int y = 0; y < MazeDatabase.GetMaze[indexMap].GetLength(0); y++)
+        int mIndex = 1; // always restart in the first side map index
+        for (int y = 0; y < MazeDatabase.GetMaze[mIndex].GetLength(0); y++)
         {
-            for (int x = 0; x < MazeDatabase.GetMaze[indexMap].GetLength(1); x++)
+            for (int x = 0; x < MazeDatabase.GetMaze[mIndex].GetLength(1); x++)
             {
-                if (MazeDatabase.GetMaze[indexMap][y, x] == MazeGenerator.MAZESTART)
+                if (MazeDatabase.GetMaze[mIndex][y, x] == MazeGenerator.MAZESTART)
                 {
-                    transform.position = new Vector3(x + indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0), 0.0f, y);
+                    transform.position = new Vector3(x + mIndex * MazeDatabase.GetMaze[mIndex].GetLength(0), 0.0f, y);
                     return;
                 }
             }
@@ -79,7 +80,7 @@ public class PlayerMovementControl : MonoBehaviour
         if (GlobalVariable.onPauseGame) return;
         if (!readMap)
         {
-            if (MazeDatabase.GetMaze[indexMap] != null)
+            if (MazeDatabase.GetMaze[1] != null)
             {
                 readMap = true;
                 movingState = 0;

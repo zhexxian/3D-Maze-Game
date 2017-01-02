@@ -10,7 +10,6 @@ public class GlobalVariable
     private static int _maxGemNumber;
     private static int _currGemNumber;
     private static int _levelMap = 1; // 1 - 3
-    private static int _indexMap = 0; // 0 - 5
     private static int _unlockedLevel = 1; // 1 - 3
 
     
@@ -31,10 +30,9 @@ public class GlobalVariable
         set { _onPauseGame = value; }
     }
 
-    public static int IndexMap
+    public static int getIndexMap()
     {
-        get { return _indexMap; }
-        set { _indexMap = value; }
+        return GetPlayerCoordinate()[0];
     }
 
     public static int MaxGemNumber
