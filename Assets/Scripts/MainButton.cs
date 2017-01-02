@@ -51,7 +51,7 @@ public class MainButton : MonoBehaviour
     public void Ground_button_click() {
         GlobalVariable.LevelMap = 1;
         MazeDatabase.GenerateMaze(10);
-        SceneManager.LoadScene("game-scene");
+        SceneManager.LoadScene("intro-scene");
     }
 
     public void Sea_button_click() {
