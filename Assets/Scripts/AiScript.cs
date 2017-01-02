@@ -142,7 +142,7 @@ public class AiScript : MonoBehaviour
 
     public void setCurrentLocationAsStartNode()
     {
-        //Debug.Log("MapNode Length = " + mapNode.Length);
+        
         int indexX = (int)Math.Round((transform.position.x - indexMap * mapNode.Length), MidpointRounding.AwayFromZero);
         int indexY = (int)Math.Round(transform.position.z, MidpointRounding.AwayFromZero);
         startMapNode = mapNode[indexY][indexX];
@@ -258,15 +258,16 @@ public class AiScript : MonoBehaviour
         {
             if (indexMap != GlobalVariable.getIndexMap()) {
                 // Realocate Ai to the new location in the new map side
+                indexMap = GlobalVariable.getIndexMap();
                 initMapNode();
                 placeAIInStartPosition();
                 startIdle();
             }
-            indexMap = GlobalVariable.getIndexMap();
+            
             //testingMovementManual();
             if (checkCatchPlayer())
             {
-                Debug.Log("Catch Player");
+                //Debug.Log("Catch Player");
                 startIdle();
                 resetPlayer();
             }
@@ -331,8 +332,6 @@ public class AiScript : MonoBehaviour
         distanceZ = distanceZ < 0 ? -distanceZ : distanceZ;
         int indexX = (int)Math.Round((playerX - indexMap * MazeDatabase.GetMaze[indexMap].GetLength(0)), MidpointRounding.AwayFromZero);
         int indexY = (int)Math.Round(playerZ, MidpointRounding.AwayFromZero);
-        if (distanceX < 1 && distanceZ < 1)
-            Debug.Log("distance : " + distanceX + "," + distanceZ);
         return (distanceX < catchRange && distanceZ < catchRange && MazeDatabase.GetMaze[indexMap][indexY, indexX] != MazeGenerator.MAZESTART);
     }
 }

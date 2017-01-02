@@ -11,8 +11,27 @@ public class GlobalVariable
     private static int _currGemNumber;
     private static int _levelMap = 1; // 1 - 3
     private static int _unlockedLevel = 1; // 1 - 3
+    private static int[] finishNodeIndex = {0,0,0};
+    private static int[] finishNodeCoordinat = { 0, 0 };
 
-    
+    public static int[] GetFinishNodeCoordinate()
+    {
+        return finishNodeCoordinat;
+    }
+
+    public static void SetFinishNodeCoordinate(int[] coordinate)
+    {
+        finishNodeCoordinat = coordinate;
+    }
+
+    public static int[] GetFinishNodeIndex() {
+        return finishNodeIndex;
+    }
+
+    public static void SetFinishNodeIndex(int[] index)
+    {
+        finishNodeIndex = index;
+    }
 
     public static int UnlockedLevel
     {

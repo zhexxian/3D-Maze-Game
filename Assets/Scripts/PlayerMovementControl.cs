@@ -75,6 +75,14 @@ public class PlayerMovementControl : MonoBehaviour
         }
     }
 
+    void cheat() {
+        if (Input.GetKey("c")) {
+             transform.position = new Vector3(GlobalVariable.GetFinishNodeCoordinate()[0], 0.0f, GlobalVariable.GetFinishNodeCoordinate()[1]);
+            //Debug.Log("X,Y="+","+)
+            //transform.position = GameObject.Find("Finish Point").transform.position;
+        }
+    }
+
     void Update()
     {
         if (GlobalVariable.onPauseGame) return;
@@ -90,6 +98,7 @@ public class PlayerMovementControl : MonoBehaviour
         }
         else
         {
+            cheat();
             if (resetPlayer)
             {
                 placePlayerInStartPosition();

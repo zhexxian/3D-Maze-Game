@@ -94,11 +94,14 @@ public class CreateMaze : MonoBehaviour
                                 go = (GameObject)Instantiate(PrefabGem3);
                             }
                             go.transform.localPosition = new Vector3(x + a * MazeDatabase.GetMaze[a].GetLength(0), 0.5f, y);
+                            go.name = "gem_" + gemNumber;
                             gemNumber++;
                         }
                         if (MazeDatabase.GetMaze[a][y, x] == "F")
                         {
                             GameObject.Find("Finish Point").transform.localPosition = new Vector3(x + a * MazeDatabase.GetMaze[a].GetLength(0), 0.5f, y);
+                            GlobalVariable.SetFinishNodeIndex(new int[3] { a, x, y });
+                            GlobalVariable.SetFinishNodeCoordinate(new int[2] { x + a * MazeDatabase.GetMaze[a].GetLength(0), y });
                         }
 
                     }
