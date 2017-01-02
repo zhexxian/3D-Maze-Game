@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainButton : MonoBehaviour
 {
@@ -41,6 +42,18 @@ public class MainButton : MonoBehaviour
         mState = state.options_menu;
         mainMenu.SetActive(false);
         optionsMenu.SetActive(true);
+    }
+
+    public void Music_button_click() {
+        Image btn_music = GameObject.Find("btn_music").GetComponent<Image>();
+        GlobalVariable.useMusic = !GlobalVariable.useMusic;
+        if (GlobalVariable.useMusic)
+        {
+            btn_music.sprite = Resources.Load<Sprite>("Images/Button/btn_music_on");
+        }
+        else {
+            btn_music.sprite = Resources.Load<Sprite>("Images/Button/btn_music_off");
+        }
     }
 
     public void Exit_button_click()
