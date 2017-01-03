@@ -26,6 +26,7 @@ public class LoadGameScene : MonoBehaviour {
             {  
                 Destroy(gameObj);
             }
+			GameObject.FindWithTag("GameOver").SetActive(false);
             
             SceneManager.UnloadScene("map-scene");
             //SceneManager.LoadScene("game-scene");

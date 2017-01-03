@@ -11,6 +11,7 @@ public class PlayerMovementControl : MonoBehaviour
     public float sideStepSpeed = 0.1f;
     public bool enableSideStep = true;
     public bool controlByMouse = true;
+	public GameObject gameOverOverlay;
     private float speedFactor = 0.0f;
     private bool readMap = false;
     private int indexMap = 1; // 1-6 
@@ -83,8 +84,16 @@ public class PlayerMovementControl : MonoBehaviour
         }
     }
 
+	void checkGameOver(){
+		if (Input.GetKey("o")) {
+			gameOverOverlay.SetActive (true);
+		}
+	
+	}
+
     void Update()
     {
+		checkGameOver ();
         if (GlobalVariable.onPauseGame) return;
         if (!readMap)
         {
