@@ -12,17 +12,52 @@ public class MazeDatabase
     {
     }
 
-    public static void GenerateMaze(int maze_size)
+    public static void GenerateMaze(int p_level)
+    {
+        if (p_level == 0)
+        {
+            for (int a = 1; a <= 6; a++)
+            {
+                m_maze[a] = new string[6, 6];
+            }
+            string maze1 =
+                "######" +
+                "#TG F#" +
+                "#    #" +
+                "#    #" +
+                "# SS #" +
+                "######";
+            for (int y = 0; y < 6; y++)
+            {
+                for (int x = 0; x < 6; x++)
+                {
+                    m_maze[1][y, x] = maze1[y * 6 + x].ToString();
+                }
+            }
+        }
+        else
+        {
+            string[] leveldata = GlobalVariable.GetLevelData(p_level);
+            int mazesize = Convert.ToInt32(leveldata[0]);
+            float mazecomplexity = Convert.ToSingle(leveldata[1]);
+            int totalgem = Convert.ToInt32(leveldata[2]);
+
+            GenerateMaze(mazesize, mazecomplexity, totalgem);
+        }
+    }
+
+
+    public static void GenerateMaze(int p_mazesize, float p_complexity, int p_totalgem)
     {
         System.Random random = new System.Random();
-        m_maze[1] = MazeGenerator.CreateMaze(maze_size, 0.03f, 0, 3, true, false);
+        m_maze[1] = MazeGenerator.CreateMaze(p_mazesize, 0.03f, 0, 3, true, false);
         m_teleportlink[1] = new int[m_maze[1].GetLength(0),m_maze[1].GetLength(1)][];
 
         int mazeFinishPoint = random.Next(2, 6);
 
         for (int a = 2; a <= 6; a++)
         {
-            m_maze[a] = MazeGenerator.CreateMaze(maze_size, 0.03f, 0, 3, false, a == mazeFinishPoint);
+            m_maze[a] = MazeGenerator.CreateMaze(p_mazesize, 0.03f, 0, 3, false, a == mazeFinishPoint);
             m_teleportlink[a] = new int[m_maze[a].GetLength(0), m_maze[a].GetLength(1)][];
         }
 

@@ -21,7 +21,7 @@ public class HealthBar : MonoBehaviour {
         }
         else if (gameObject.name == "Level")
         {
-            text = "Level : " + GlobalVariable.LevelMap;
+            text = "Level : " + GlobalVariable.CurrentLevel;
         }
         else {
             text = GlobalVariable.CurrGemNumber + "/" + GlobalVariable.MaxGemNumber;

@@ -10,34 +10,29 @@ public class GlobalVariable
     private static Vector3 m_playerPosition;
     private static int _maxGemNumber;
     private static int _currGemNumber;
-    private static int _levelMap = 1; // 1 - 3
-    private static int _unlockedLevel = 1; // 1 - 3
-    private static int[] finishNodeIndex = {0,0,0};
-    private static int[] finishNodeCoordinat = { 0, 0 };
+    private static int _unlockedLevel; // 1 - 3
+    private static int m_currentlevel;
+    private static int[] _finishNodeCoordinate = { 0, 0 };
+
+
+    //level
+    private static string[][] m_leveldata = new string[4][];
 
     public static int[] GetFinishNodeCoordinate()
     {
-        return finishNodeCoordinat;
+        return _finishNodeCoordinate;
     }
 
     public static void SetFinishNodeCoordinate(int[] coordinate)
     {
-        finishNodeCoordinat = coordinate;
-    }
-
-    public static int[] GetFinishNodeIndex() {
-        return finishNodeIndex;
-    }
-
-    public static void SetFinishNodeIndex(int[] index)
-    {
-        finishNodeIndex = index;
+        _finishNodeCoordinate = coordinate;
     }
 
     public static int UnlockedLevel
     {
         get { return _unlockedLevel; }
-        set {
+        set
+        {
             _unlockedLevel = value;
             DataControl.mGameData.unlockedLevel = _unlockedLevel;
             DataControl.Save();
@@ -73,12 +68,6 @@ public class GlobalVariable
         set { _currGemNumber = value; }
     }
 
-    public static int LevelMap
-    {
-        get { return _levelMap; }
-        set { _levelMap = value; }
-    }
-
     public static Vector3 PlayerPosition
     {
         get { return m_playerPosition; }
@@ -87,12 +76,76 @@ public class GlobalVariable
 
     public static int[] GetPlayerCoordinate()
     {
-        float decimalValue = (float)((float)(MazeDatabase.GetMaze[1].GetLength(1))/2f)-(float)(Math.Truncate((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f));
-        int a = (int)Math.Truncate((m_playerPosition.x+decimalValue) / MazeDatabase.GetMaze[1].GetLength(1));
-        int x = (int)Math.Truncate((m_playerPosition.x+decimalValue) % MazeDatabase.GetMaze[1].GetLength(1));
-        int z = (int)Math.Truncate(m_playerPosition.z+decimalValue);
+        float decimalValue = (float)((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f) - (float)(Math.Truncate((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f));
+        int a = (int)Math.Truncate((m_playerPosition.x + decimalValue) / MazeDatabase.GetMaze[1].GetLength(1));
+        int x = (int)Math.Truncate((m_playerPosition.x + decimalValue) % MazeDatabase.GetMaze[1].GetLength(1));
+        int z = (int)Math.Truncate(m_playerPosition.z + decimalValue);
 
         int[] result = new int[3] { a, x, z };
         return result;
+    }
+
+    public static int[] ConvertPositionToCoordinate(float p_x, float p_z)
+    {
+        float decimalValue = (float)((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f) - (float)(Math.Truncate((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f));
+        int a = (int)Math.Truncate((p_x + decimalValue) / MazeDatabase.GetMaze[1].GetLength(1));
+        int x = (int)Math.Truncate((p_x + decimalValue) % MazeDatabase.GetMaze[1].GetLength(1));
+        int z = (int)Math.Truncate(p_z + decimalValue);
+
+        int[] result = new int[3] { a, x, z };
+        return result;
+    }
+
+    public static int CurrentLevel
+    {
+        get { return m_currentlevel; }
+        set { m_currentlevel = value; }
+    }
+
+    public static void InitializeLevelData()
+    {
+        //                       level   |1        |2          |3
+        //                               +---------+-----------+----------
+        //array[0] = maze size           |8,       |11,        |15
+        //array[1] = maze complexity     |0.1,     |0.07,      |0.04
+        //array[2] = total gem per side  |3,       |5,         |8
+        //array[3] = time                |300,     |600,       |1200
+        //array[4] = monster lookup size |5,       |6,         |8
+        //array[5] = area type           |land,    |water,     |sky
+
+        m_leveldata[0] = new string[6];
+        m_leveldata[1] = new string[6];
+        m_leveldata[2] = new string[6];
+        m_leveldata[3] = new string[6];
+
+        m_leveldata[1][0] = "8";
+        m_leveldata[2][0] = "11";
+        m_leveldata[3][0] = "15";
+
+        m_leveldata[1][1] = "0.1";
+        m_leveldata[2][1] = "0.07";
+        m_leveldata[3][1] = "0.04";
+
+        m_leveldata[1][2] = "3";
+        m_leveldata[2][2] = "5";
+        m_leveldata[3][2] = "8";
+
+        m_leveldata[1][3] = "300";
+        m_leveldata[2][3] = "600";
+        m_leveldata[3][3] = "1200";
+
+        m_leveldata[1][4] = "5";
+        m_leveldata[2][4] = "6";
+        m_leveldata[3][4] = "8";
+
+        m_leveldata[1][5] = "land";
+        m_leveldata[2][5] = "water";
+        m_leveldata[3][5] = "sky";
+
+    }
+
+    public static string[] GetLevelData(int p_level)
+    {
+        return m_leveldata[p_level];
     }
 }

@@ -13,6 +13,7 @@ public class MainButton : MonoBehaviour
     private GameObject creditsMenu;
 
     void Start() {
+        GlobalVariable.InitializeLevelData();
         mState = state.main_menu;
         mainMenu = GameObject.Find("main_menu");
         playMenu = GameObject.Find("play_menu");
@@ -34,7 +35,9 @@ public class MainButton : MonoBehaviour
 
     public void Tutorial_button_click()
     {
-        Ground_button_click();
+        GlobalVariable.CurrentLevel = 0;
+        MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
+        SceneManager.LoadScene("game-scene");
     }
 
     public void Options_button_click()
@@ -62,20 +65,20 @@ public class MainButton : MonoBehaviour
     }
 
     public void Ground_button_click() {
-        GlobalVariable.LevelMap = 1;
-        MazeDatabase.GenerateMaze(10);
+        GlobalVariable.CurrentLevel = 1;
+        MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("intro-scene");
     }
 
     public void Sea_button_click() {
-        GlobalVariable.LevelMap = 2;
-        MazeDatabase.GenerateMaze(10);
+        GlobalVariable.CurrentLevel = 2;
+        MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("game-scene");
     }
 
     public void Sky_button_click() {
-        GlobalVariable.LevelMap = 3;
-        MazeDatabase.GenerateMaze(10);
+        GlobalVariable.CurrentLevel = 3;
+        MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("game-scene");
     }
 
