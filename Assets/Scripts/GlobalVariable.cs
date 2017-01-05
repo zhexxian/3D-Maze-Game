@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using Assets.Scripts;
+using System.Collections.Generic;
 
 public class GlobalVariable
 {
@@ -9,10 +10,34 @@ public class GlobalVariable
     private static bool _useMusic = true;
     private static Vector3 m_playerPosition;
     private static int _maxGemNumber;
+    private static int _requiredGemNumber;
     private static int _currGemNumber;
     private static int _unlockedLevel; // 1 - 3
     private static int m_currentlevel;
     private static int[] _finishNodeCoordinate = { 0, 0 };
+    private static string finishText;
+    public static GameObject[] mGem;
+    public static List<string> nonActiveGem = new List<string>();
+
+
+    public static string getResetPlayerText() {
+        return "You have been caught by the guardian! Some of your gems may missing";
+    }
+    public static string getFinishPlayerText() {
+        finishText = "Congrulation, you success to get out from the ";
+        if (m_currentlevel == 1) {
+            finishText += "ground's world !";
+        }
+        if (m_currentlevel == 2)
+        {
+            finishText += "sea's world !";
+        }
+        if (m_currentlevel == 3)
+        {
+            finishText += "sky's world ! And Finally you are free!";
+        }
+        return finishText;
+    }
 
 
     //level
@@ -60,6 +85,12 @@ public class GlobalVariable
     {
         get { return _maxGemNumber; }
         set { _maxGemNumber = value; }
+    }
+
+    public static int RequiredGemNumber
+    {
+        get { return _requiredGemNumber; }
+        set { _requiredGemNumber = value; }
     }
 
     public static int CurrGemNumber

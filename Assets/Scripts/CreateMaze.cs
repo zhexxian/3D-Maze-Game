@@ -143,9 +143,16 @@ public class CreateMaze : MonoBehaviour
             }
         }
         GlobalVariable.MaxGemNumber = gemNumber;
-        //create maze  teleport spot
+        GlobalVariable.mGem = new GameObject[gemNumber];
+        GlobalVariable.RequiredGemNumber = gemNumber / 2;
+        GlobalVariable.nonActiveGem.Clear();
+        for (int g = 0; g < gemNumber; g++)
+        {
+            GlobalVariable.mGem[g] = GameObject.Find("gem_" + g);
+        }
+            //create maze  teleport spot
 
-        if (GlobalVariable.CurrentLevel > 0)
+            if (GlobalVariable.CurrentLevel > 0)
         {
             for (int a = 1; a <= 6; a++)
             {

@@ -52,6 +52,9 @@ public class AiScript : MonoBehaviour
         haveReadTheMap = false;
         mAnimation.wrapMode = WrapMode.Loop;
         mWalkingCoordinateNode = new List<MapNode>();
+        if (GlobalVariable.CurrentLevel == 0) {
+            startIdle();
+        }
     }
 
     public float getSpeedFactor()
@@ -237,14 +240,11 @@ public class AiScript : MonoBehaviour
             }
         }
     }
-    void testingMovementManual()
-    {
-        if (Input.GetKey("r")) resetPlayer();
-    }
+
     // Update is called once per frame
     void Update()
     {
-        if (GlobalVariable.onPauseGame) return;
+        if (GlobalVariable.onPauseGame || PlayerMovementControl.isPlayerFinish) return;
         if (!haveReadTheMap)
         {   // Try to read the map
             if (MazeDatabase.GetMaze[1] != null)
@@ -256,6 +256,7 @@ public class AiScript : MonoBehaviour
         }
         else
         {
+            if (GlobalVariable.CurrentLevel == 0) return;
             if (indexMap != GlobalVariable.getIndexMap()) {
                 // Realocate Ai to the new location in the new map side
                 indexMap = GlobalVariable.getIndexMap();
@@ -264,10 +265,8 @@ public class AiScript : MonoBehaviour
                 startIdle();
             }
             
-            //testingMovementManual();
             if (checkCatchPlayer())
             {
-                //Debug.Log("Catch Player");
                 startIdle();
                 resetPlayer();
             }
@@ -314,12 +313,30 @@ public class AiScript : MonoBehaviour
 
     }
 
+    void regeneratedGem(int number)
+    {
+        if (number > 0 && GlobalVariable.nonActiveGem.Count >= number) {
+            for (int x = 0; x < number; x++) {
+                String name = GlobalVariable.nonActiveGem[0];
+                name = name.Substring(4);
+                int index = Int32.Parse(name);
+                Debug.Log(index);
+                GlobalVariable.nonActiveGem.RemoveAt(0);
+                GlobalVariable.mGem[index].SetActive(true);
+            }
+        }
+
+    }
+
     void resetPlayer()
     {
         // Decrease Gem into half
+        int delta = GlobalVariable.CurrGemNumber > 1 ? (int)Math.Round((double)(GlobalVariable.CurrGemNumber / 2), MidpointRounding.AwayFromZero) : 0;
+        delta = GlobalVariable.CurrGemNumber - delta;
         GlobalVariable.CurrGemNumber = GlobalVariable.CurrGemNumber > 1 ? (int)Math.Round((double)(GlobalVariable.CurrGemNumber / 2), MidpointRounding.AwayFromZero) : 0;
         PlayerMovementControl.resetPlayer = true;
         // generate gem
+        regeneratedGem(delta);
     }
 
     bool checkCatchPlayer()

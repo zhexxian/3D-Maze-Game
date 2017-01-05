@@ -27,9 +27,10 @@ public class GemRotation : MonoBehaviour {
             (playerCoordinate[1] == gemCoordinate[1]) &&
             (playerCoordinate[2] == gemCoordinate[2]))
         {
-            Debug.Log("adsf");
             GameObject.Find("MainPlayer/PSGemCollect").GetComponent<ParticleSystem>().Play();
-            Destroy(gameObject);            
+            GlobalVariable.CurrGemNumber += 1;
+            GlobalVariable.nonActiveGem.Add(gameObject.name);
+            gameObject.SetActive(false);
         }
 	}
 }

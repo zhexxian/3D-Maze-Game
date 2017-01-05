@@ -24,7 +24,7 @@ public class HealthBar : MonoBehaviour {
             text = "Level : " + GlobalVariable.CurrentLevel;
         }
         else {
-            text = GlobalVariable.CurrGemNumber + "/" + GlobalVariable.MaxGemNumber;
+            text = GlobalVariable.CurrGemNumber + "/" + GlobalVariable.RequiredGemNumber;
         }
 
         GetComponent<UnityEngine.UI.Text>().text = text;

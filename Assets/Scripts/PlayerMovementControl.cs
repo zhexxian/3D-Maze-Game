@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerMovementControl : MonoBehaviour
 {
     public static bool resetPlayer = false;
+    public static bool isPlayerFinish = false;
     // Public for GUI parameter input
     public float walkSpeedFactor = 2.0f;
     public float runSpeedFactor = 6.0f;
@@ -12,7 +13,11 @@ public class PlayerMovementControl : MonoBehaviour
     public bool enableSideStep = true;
     public bool controlByMouse = true;
 	public GameObject gameOverOverlay;
+    public GameObject infoOverlay;
+    public GameObject infoText;
     private float speedFactor = 0.0f;
+    private float MaxInfoShowTime = 2.0f;
+    private float infoShowTime = 0.0f;
     private bool readMap = false;
     private int indexMap = 1; // 1-6 
 
@@ -78,23 +83,66 @@ public class PlayerMovementControl : MonoBehaviour
 
     void cheat() {
         if (Input.GetKey("c")) {
-             transform.position = new Vector3(GlobalVariable.GetFinishNodeCoordinate()[0], 0.0f, GlobalVariable.GetFinishNodeCoordinate()[1]);
-            //Debug.Log("X,Y="+","+)
-            //transform.position = GameObject.Find("Finish Point").transform.position;
+            GlobalVariable.CurrGemNumber = GlobalVariable.RequiredGemNumber;
+            transform.position = new Vector3(GlobalVariable.GetFinishNodeCoordinate()[0], 0.0f, GlobalVariable.GetFinishNodeCoordinate()[1]);
         }
     }
 
-	void checkGameOver(){
+    void checkInfoOverlay() {
+        if (infoOverlay.activeInHierarchy) {
+            infoShowTime -= Time.deltaTime;
+            if (infoShowTime <= 0)
+                infoOverlay.SetActive(false);
+        }
+    }
+    void checkResetPlayer() {
+        if (resetPlayer)
+        {
+            infoShowTime = MaxInfoShowTime;
+            infoOverlay.SetActive(true);
+            infoText.GetComponent<UnityEngine.UI.Text>().text = GlobalVariable.getResetPlayerText();
+            float fadeTime = GetComponent<Fading>().BeginFade(1);
+            float startTime = Time.realtimeSinceStartup;
+            while (true)
+            {
+                if (Time.realtimeSinceStartup - startTime > 1)
+                {
+                    placePlayerInStartPosition();
+                    break;
+                }
+            }
+            GetComponent<Fading>().BeginFade(-1);
+            resetPlayer = false;
+        }
+    }
+
+    void checkGameOver(){
 		if (Input.GetKey("o")) {
 			gameOverOverlay.SetActive (true);
 		}
 	
 	}
 
+    void checkFinish() {
+        int[] playerCoordinate = GlobalVariable.GetPlayerCoordinate();
+        int[] finishCoordinate = GlobalVariable.ConvertPositionToCoordinate(GlobalVariable.GetFinishNodeCoordinate()[0], GlobalVariable.GetFinishNodeCoordinate()[1]);
+        if (playerCoordinate[0] == finishCoordinate[0] &&
+            playerCoordinate[1] == finishCoordinate[1] &&
+            playerCoordinate[2] == finishCoordinate[2] &&
+            GlobalVariable.RequiredGemNumber <= GlobalVariable.CurrGemNumber
+            ) {
+            infoShowTime = MaxInfoShowTime;
+            infoOverlay.SetActive(true);
+            infoText.GetComponent<UnityEngine.UI.Text>().text = GlobalVariable.getFinishPlayerText();
+            isPlayerFinish = true;
+        }
+    }
+
+
     void Update()
     {
-		checkGameOver ();
-        if (GlobalVariable.onPauseGame) return;
+		checkGameOver();
+        if (GlobalVariable.onPauseGame || isPlayerFinish) return;
         if (!readMap)
         {
             if (MazeDatabase.GetMaze[1] != null)
@@ -108,11 +156,9 @@ public class PlayerMovementControl : MonoBehaviour
         else
         {
             cheat();
-            if (resetPlayer)
-            {
-                placePlayerInStartPosition();
-                resetPlayer = false;
-            }
+            checkInfoOverlay();
+            checkResetPlayer();
+            checkFinish();
             if (isMovementControlKey(0) || isMovementControlKey(1))
             {
                 movingState = 0;
@@ -159,7 +205,7 @@ public class PlayerMovementControl : MonoBehaviour
             }
         }
 
-        // Update position to global variable
+        
         if (Input.GetKeyDown(KeyCode.T))
         {
             int[] playerPosition = GlobalVariable.GetPlayerCoordinate();
@@ -188,6 +234,7 @@ public class PlayerMovementControl : MonoBehaviour
                 GetComponent<Fading>().BeginFade(-1);
             }
         }
+        // Update position to global variable
         GlobalVariable.PlayerPosition = this.transform.localPosition;
     }
 }
