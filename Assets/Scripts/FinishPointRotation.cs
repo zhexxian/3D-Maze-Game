@@ -29,7 +29,7 @@ public class FinishPointRotation : MonoBehaviour {
         {
             //finish code here
 
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }
