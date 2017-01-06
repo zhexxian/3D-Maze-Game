@@ -7,6 +7,8 @@ public class MainButton : MonoBehaviour
 {
     enum state{ main_menu,options_menu,play_menu,credit_menu};
     state mState;
+    public Sprite musicOn;
+    public Sprite musicOff;
     private GameObject mainMenu;
     private GameObject playMenu;
     private GameObject optionsMenu;
@@ -52,10 +54,10 @@ public class MainButton : MonoBehaviour
         GlobalVariable.useMusic = !GlobalVariable.useMusic;
         if (GlobalVariable.useMusic)
         {
-            btn_music.sprite = Resources.Load<Sprite>("Images/Button/btn_music_on");
+            btn_music.sprite = musicOn;
         }
         else {
-            btn_music.sprite = Resources.Load<Sprite>("Images/Button/btn_music_off");
+            btn_music.sprite = musicOff;
         }
     }
 
