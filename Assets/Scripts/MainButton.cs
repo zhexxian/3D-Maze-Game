@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Assets.Scripts;
 
 public class MainButton : MonoBehaviour
 {
@@ -9,18 +10,36 @@ public class MainButton : MonoBehaviour
     state mState;
     public Sprite musicOn;
     public Sprite musicOff;
+    public Button btnSea;
+    public Button btnSky;
     private GameObject mainMenu;
     private GameObject playMenu;
     private GameObject optionsMenu;
     private GameObject creditsMenu;
 
     void Start() {
+        if (GlobalVariable.UnlockedLevel == -1) {
+            DataControl.Load();
+        }
         GlobalVariable.InitializeLevelData();
         mState = state.main_menu;
         mainMenu = GameObject.Find("main_menu");
         playMenu = GameObject.Find("play_menu");
         optionsMenu = GameObject.Find("options_menu");
         creditsMenu = GameObject.Find("credits_menu");
+        if (GlobalVariable.UnlockedLevel > 1)
+        {
+            btnSea.interactable = true;
+            if(GlobalVariable.UnlockedLevel == 3)
+                btnSky.interactable = true;
+            else
+                btnSky.interactable = false;
+        }
+        else {
+            btnSky.interactable = false;
+            btnSea.interactable = false;
+        }
+
         Debug.Log("Starting main menu");
         playMenu.SetActive(false);
         optionsMenu.SetActive(false);

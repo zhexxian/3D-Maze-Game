@@ -6,34 +6,29 @@ using Assets.Scripts;
 
 public class AiScript : MonoBehaviour
 {
-
-    public int monster_id;
-    public float radius = 0.01f;
-
     private MapNode[][] mapNode;
     private Animation mAnimation;
     private CharacterController controller;
 
     // Public for GUI parameter input
+    public float radius = 0.01f;
     public float maxIdleTime = 3.0f;
     public float maxChasingTime = 5.0f;
-    public float seenRange = 2.0f;
     public float walkSpeedFactor = 2.0f;
     public float runSpeedFactor = 2.0f;
     public float catchRange = 0.72f;
+    public float seenRange = 2.0f;
 
     private float speedFactor = 2.0f;
     private float idleTime = 0.0f;
     private float rechasingTime = 0.0f;
     private int indexMap = 1;  // 1-6 
-    private int movingState = 0;  // 0 - iddle   || 1 - walking   || 2 - running
     private int faceDirection = 2;  // 0 - camera direction   || 1 - right direction   || 2 - forward direction   || 3 - left direction
     private int walkingNodeIndex = 0;
-
-    private Vector2 nextTargetCoordinat;
-
+   
     private MapNode startMapNode;       // Start Current Posisition of AI
     private MapNode nextTargetMapNode;  // Goal Posisition That AI should Go
+    private Vector2 nextTargetCoordinat;
     private List<MapNode> mWalkingCoordinateNode; // For Storing Which Node of Map that should passed
 
     enum AiBehaviour { chasing, patroling, idle };
@@ -127,14 +122,6 @@ public class AiScript : MonoBehaviour
                 }
                 else
                 {
-                    float dX = nextTargetCoordinat.x - controller.transform.position.x;
-                    float dY = nextTargetCoordinat.y - controller.transform.position.z;
-                    float minX = nextTargetCoordinat.x - 0.1f;
-                    float maxX = nextTargetCoordinat.x + 0.1f;
-                    float minY = nextTargetCoordinat.y - 0.1f;
-                    float maxY = nextTargetCoordinat.y + 0.1f;
-                    //Debug.Log("Next node");
-                    //Debug.Log("X1 = " + controller.transform.position.x + " , Y1 = " + controller.transform.position.z);
                     walkingNodeIndex++;
                     setCurrentLocationAsStartNode();
                 }

@@ -12,7 +12,7 @@ public class GlobalVariable
     private static int _maxGemNumber;
     private static int _requiredGemNumber;
     private static int _currGemNumber;
-    private static int _unlockedLevel; // 1 - 3
+    private static int _unlockedLevel = -1; // 0 - 3 || 
     private static int m_currentlevel;
     private static int[] _finishNodeCoordinate = { 0, 0 };
     private static string finishText;
@@ -59,7 +59,6 @@ public class GlobalVariable
         set
         {
             _unlockedLevel = value;
-            DataControl.mGameData.unlockedLevel = _unlockedLevel;
             DataControl.Save();
         }
     }

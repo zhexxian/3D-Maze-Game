@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovementControl : MonoBehaviour
 {
@@ -50,9 +51,11 @@ public class PlayerMovementControl : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        onCollision = false;
-        controller = GetComponent<CharacterController>();
-        mAnimator = GetComponent<Animator>();
+        resetPlayer     = false;
+        isPlayerFinish  = false;
+        onCollision     = false;
+        controller  = GetComponent<CharacterController>();
+        mAnimator   = GetComponent<Animator>();
     }
 
     void updateAnimation()
@@ -81,10 +84,16 @@ public class PlayerMovementControl : MonoBehaviour
         }
     }
 
-    void cheat() {
-        if (Input.GetKey("c")) {
+    void cheat()
+    {
+        if (Input.GetKey("c"))
+        {
             GlobalVariable.CurrGemNumber = GlobalVariable.RequiredGemNumber;
             transform.position = new Vector3(GlobalVariable.GetFinishNodeCoordinate()[0], 0.0f, GlobalVariable.GetFinishNodeCoordinate()[1]);
+        }
+        if (Input.GetKey("b"))
+        {
+            SceneManager.LoadScene("menu-scene");
         }
     }
 
@@ -135,14 +144,22 @@ public class PlayerMovementControl : MonoBehaviour
             infoOverlay.SetActive(true);
             infoText.GetComponent<UnityEngine.UI.Text>().text = GlobalVariable.getFinishPlayerText();
             isPlayerFinish = true;
+            Debug.Log(GlobalVariable.UnlockedLevel);
+            if (GlobalVariable.UnlockedLevel == 1 && GlobalVariable.CurrentLevel == 1){
+                GlobalVariable.UnlockedLevel = 2;
+                Debug.Log("finish 1");
+            }
+            else if (GlobalVariable.UnlockedLevel == 2 && GlobalVariable.CurrentLevel == 2) {
+                GlobalVariable.UnlockedLevel = 3;
+                Debug.Log("finish 2");
+            }
+            Debug.Log(GlobalVariable.UnlockedLevel);
         }
     }
 
 
     void Update()
     {
-		checkGameOver();
-        if (GlobalVariable.onPauseGame || isPlayerFinish) return;
         if (!readMap)
         {
             if (MazeDatabase.GetMaze[1] != null)
@@ -156,6 +173,8 @@ public class PlayerMovementControl : MonoBehaviour
         else
         {
             cheat();
+            checkGameOver();
+            if (GlobalVariable.onPauseGame || isPlayerFinish) return;
             checkInfoOverlay();
             checkResetPlayer();
             checkFinish();
