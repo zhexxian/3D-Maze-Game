@@ -59,6 +59,7 @@ public class MainButton : MonoBehaviour
         GlobalVariable.CurrentLevel = 0;
         MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("game-scene");
+		GlobalVariable.turnOnTutorialCamera(true);
     }
 
     public void Options_button_click()

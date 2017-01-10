@@ -16,6 +16,7 @@ public class PlayerMovementControl : MonoBehaviour
 	public GameObject gameOverOverlay;
     public GameObject infoOverlay;
     public GameObject infoText;
+	public GameObject tutorialCamera;
     private float speedFactor = 0.0f;
     private float MaxInfoShowTime = 2.0f;
     private float infoShowTime = 0.0f;
@@ -56,6 +57,9 @@ public class PlayerMovementControl : MonoBehaviour
         onCollision     = false;
         controller  = GetComponent<CharacterController>();
         mAnimator   = GetComponent<Animator>();
+		if (GlobalVariable.tutorialCameraIsOn ()) {
+			tutorialCamera.SetActive (true);
+		}
     }
 
     void updateAnimation()

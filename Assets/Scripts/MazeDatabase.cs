@@ -22,10 +22,10 @@ public class MazeDatabase
             }
             string maze1 =
                 "######" +
-                "#TG F#" +
+                "#G  F#" +
                 "#    #" +
                 "#    #" +
-                "# SS #" +
+                "#S  T#" +
                 "######";
             for (int y = 0; y < 6; y++)
             {

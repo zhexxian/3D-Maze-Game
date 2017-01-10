@@ -8,6 +8,7 @@ public class GlobalVariable
 {
     private static bool _onPauseGame = false;
     private static bool _useMusic = true;
+	private static bool _turnOnTutorialCamera = false;
     private static Vector3 m_playerPosition;
     private static int _maxGemNumber;
     private static int _requiredGemNumber;
@@ -21,20 +22,20 @@ public class GlobalVariable
 
 
     public static string getResetPlayerText() {
-        return "You have been caught by the guardian! Some of your gems may missing";
+        return "You have been caught by the guardian! Some of your gems are lost";
     }
     public static string getFinishPlayerText() {
-        finishText = "Congrulation, you success to get out from the ";
+        finishText = "Congratulations! You are success in escaping from the ";
         if (m_currentlevel == 1) {
-            finishText += "ground's world !";
+            finishText += "ground's world maze!";
         }
         if (m_currentlevel == 2)
         {
-            finishText += "sea's world !";
+            finishText += "sea's world maze!";
         }
         if (m_currentlevel == 3)
         {
-            finishText += "sky's world ! And Finally you are free!";
+            finishText += "sky's world maze! You are free now!";
         }
         return finishText;
     }
@@ -178,4 +179,15 @@ public class GlobalVariable
     {
         return m_leveldata[p_level];
     }
+
+	public static void turnOnTutorialCamera(bool useCamera){
+		_turnOnTutorialCamera = useCamera;
+	}
+
+	public static bool tutorialCameraIsOn(){
+		if (_turnOnTutorialCamera) {
+			return true;
+		}
+		return false;
+	}
 }
