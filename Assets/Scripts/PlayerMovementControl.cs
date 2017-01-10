@@ -163,6 +163,18 @@ public class PlayerMovementControl : MonoBehaviour
         }
     }
 
+	void showTutorialOverlay(){
+		tutorialCamera.SetActive (true);
+		timerAndHealthBar.SetActive (false);
+		if (Input.GetKeyDown("return"))
+		{
+			GlobalVariable.turnOnTutorialCamera (false);
+			tutorialCamera.SetActive (false);
+			timerAndHealthBar.SetActive (true);
+		}
+
+	}
+
 
     void Update()
     {
@@ -184,7 +196,10 @@ public class PlayerMovementControl : MonoBehaviour
             checkInfoOverlay();
             checkResetPlayer();
             checkFinish();
-            if (isMovementControlKey(0) || isMovementControlKey(1))
+			if (GlobalVariable.tutorialCameraIsOn ()) {
+				showTutorialOverlay ();
+			}
+            else if (isMovementControlKey(0) || isMovementControlKey(1))
             {
                 movingState = 0;
                 if (isMovementControlKey(1))

@@ -68,6 +68,7 @@
      <Compile Include="Assets\Scripts\MazeDatabase.cs" />
      <Compile Include="Assets\Scripts\MazeGenerator.cs" />
      <Compile Include="Assets\Scripts\PlayerMovementControl.cs" />
+     <Compile Include="Assets\Scripts\TutorialNextStep.cs" />
      <Compile Include="Assets\Scripts\scaleMesh.cs" />
      <None Include="Assets\SampleScene\Shaders\ReflectiveDiffuseSpecTransp.shader" />
      <None Include="Assets\SampleScene\Shaders\DiffuseReflectiveShader.shader" />

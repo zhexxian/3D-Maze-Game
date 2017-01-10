@@ -81,7 +81,6 @@ public class CreateMazeMap : MonoBehaviour
                     }
                     else if (MazeDatabase.GetMaze[a][y, x] == "F")
                     {
-                        print("[F] " + "a: " + a + " y: " + y + " x: " + x);
                         //this is the finish point
                         cube[a][y, x] = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
