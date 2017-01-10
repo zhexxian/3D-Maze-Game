@@ -152,7 +152,7 @@ public class CreateMaze : MonoBehaviour
         }
             //create maze  teleport spot
 
-            if (GlobalVariable.CurrentLevel > 0)
+            if (GlobalVariable.CurrentLevel >= 0)
         {
             for (int a = 1; a <= 6; a++)
             {

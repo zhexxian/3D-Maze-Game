@@ -23,10 +23,11 @@ public class MazeDatabase
             string maze1 =
                 "######" +
                 "#G  F#" +
-                "#    #" +
+                "#   T#" +
                 "#    #" +
                 "#S  T#" +
                 "######";
+            
             for (int y = 0; y < 6; y++)
             {
                 for (int x = 0; x < 6; x++)
@@ -34,6 +35,10 @@ public class MazeDatabase
                     m_maze[1][y, x] = maze1[y * 6 + x].ToString();
                 }
             }
+
+            m_teleportlink[1] = new int[m_maze[1].GetLength(0), m_maze[1].GetLength(1)][];
+            SetTeleportPoint(1, 4, 4, 1, 2, 4);
+            SetTeleportPoint(1, 2, 4, 1, 4, 4);
         }
         else
         {

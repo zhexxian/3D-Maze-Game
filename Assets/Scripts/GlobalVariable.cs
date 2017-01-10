@@ -107,7 +107,7 @@ public class GlobalVariable
 
     public static int[] GetPlayerCoordinate()
     {
-        float decimalValue = (float)((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f) - (float)(Math.Truncate((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f));
+        float decimalValue = 0.5f;
         int a = (int)Math.Truncate((m_playerPosition.x + decimalValue) / MazeDatabase.GetMaze[1].GetLength(1));
         int x = (int)Math.Truncate((m_playerPosition.x + decimalValue) % MazeDatabase.GetMaze[1].GetLength(1));
         int z = (int)Math.Truncate(m_playerPosition.z + decimalValue);
@@ -118,7 +118,7 @@ public class GlobalVariable
 
     public static int[] ConvertPositionToCoordinate(float p_x, float p_z)
     {
-        float decimalValue = (float)((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f) - (float)(Math.Truncate((float)(MazeDatabase.GetMaze[1].GetLength(1)) / 2f));
+        float decimalValue = 0.5f;
         int a = (int)Math.Truncate((p_x + decimalValue) / MazeDatabase.GetMaze[1].GetLength(1));
         int x = (int)Math.Truncate((p_x + decimalValue) % MazeDatabase.GetMaze[1].GetLength(1));
         int z = (int)Math.Truncate(p_z + decimalValue);
