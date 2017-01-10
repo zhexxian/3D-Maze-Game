@@ -36,6 +36,9 @@ public class AiScript : MonoBehaviour
     private bool haveReadTheMap;
     private GameObject mainPlayer;
 
+    public GameObject PrefabAudioSource;
+    public AudioClip monsterHitSFX;
+
     // Use this for initialization
     void Start()
     {
@@ -260,6 +263,8 @@ public class AiScript : MonoBehaviour
             
             if (checkCatchPlayer())
             {
+                GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+                audio.GetComponent<AudioSource>().PlayOneShot(monsterHitSFX);
                 startIdle();
                 resetPlayer();
             }

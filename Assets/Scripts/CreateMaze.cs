@@ -25,15 +25,22 @@ public class CreateMaze : MonoBehaviour
     public GameObject PrefabGemDefault;
     public GameObject PrefabTeleportDefault;
     public GameObject PrefabFinishPointDefault;
+    public AudioClip bgmLand;
+    public AudioClip bgmWater;
+    public AudioClip bgmSky;
+    public GameObject PrefabAudioSource;
     public float yWallActive = 0;
 
     public float yWallLand;
     public float yWallWater;
     public float yWallSky;
 
+    private GameObject audio;
+
     // Use this for initialization
     void Start()
     {
+        audio = (GameObject)Instantiate(PrefabAudioSource);
         //initialize map
         int gemNumber = 0;
 
@@ -150,9 +157,9 @@ public class CreateMaze : MonoBehaviour
         {
             GlobalVariable.mGem[g] = GameObject.Find("gem_" + g);
         }
-            //create maze  teleport spot
+        //create maze  teleport spot
 
-            if (GlobalVariable.CurrentLevel >= 0)
+        if (GlobalVariable.CurrentLevel >= 0)
         {
             for (int a = 1; a <= 6; a++)
             {
@@ -173,11 +180,38 @@ public class CreateMaze : MonoBehaviour
                 }
             }
         }
+        
+        if (GlobalVariable.CurrentLevel<=1)
+        {
+            audio.GetComponent<AudioSource>().PlayOneShot(bgmLand);
+        }
+        if (GlobalVariable.CurrentLevel == 2)
+        {
+            audio.GetComponent<AudioSource>().PlayOneShot(bgmWater);
+        }
+        if (GlobalVariable.CurrentLevel == 3)
+        {
+            audio.GetComponent<AudioSource>().PlayOneShot(bgmSky);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (!audio.GetComponent<AudioSource>().isPlaying)
+        {
+            if (GlobalVariable.CurrentLevel <= 1)
+            {
+                audio.GetComponent<AudioSource>().PlayOneShot(bgmLand);
+            }
+            if (GlobalVariable.CurrentLevel == 2)
+            {
+                audio.GetComponent<AudioSource>().PlayOneShot(bgmWater);
+            }
+            if (GlobalVariable.CurrentLevel == 3)
+            {
+                audio.GetComponent<AudioSource>().PlayOneShot(bgmSky);
+            }
+        }
     }
 }

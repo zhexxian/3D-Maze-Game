@@ -49,6 +49,7 @@ public class MainButton : MonoBehaviour
     // Use this for initialization
     public void Play_button_click()
     {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         mState = state.play_menu;
         mainMenu.SetActive(false);
         playMenu.SetActive(true);
@@ -56,21 +57,23 @@ public class MainButton : MonoBehaviour
 
     public void Tutorial_button_click()
     {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         GlobalVariable.CurrentLevel = 0;
         MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("game-scene");
 		GlobalVariable.turnOnTutorialCamera(true);
-
     }
 
     public void Options_button_click()
     {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         mState = state.options_menu;
         mainMenu.SetActive(false);
         optionsMenu.SetActive(true);
     }
 
     public void Music_button_click() {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         Image btn_music = GameObject.Find("btn_music").GetComponent<Image>();
         GlobalVariable.useMusic = !GlobalVariable.useMusic;
         if (GlobalVariable.useMusic)
@@ -84,22 +87,26 @@ public class MainButton : MonoBehaviour
 
     public void Exit_button_click()
     {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         Application.Quit();
     }
 
     public void Ground_button_click() {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         GlobalVariable.CurrentLevel = 1;
         MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("intro-scene");
     }
 
     public void Sea_button_click() {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         GlobalVariable.CurrentLevel = 2;
         MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("game-scene");
     }
 
     public void Sky_button_click() {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         GlobalVariable.CurrentLevel = 3;
         MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
         SceneManager.LoadScene("game-scene");
@@ -107,6 +114,7 @@ public class MainButton : MonoBehaviour
 
     public void Credit_button_click()
     {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         mState = state.credit_menu;
         optionsMenu.SetActive(false);
         creditsMenu.SetActive(true);
@@ -114,6 +122,7 @@ public class MainButton : MonoBehaviour
 
     public void Back_button_click()
     {
+        GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         if (mState == state.credit_menu)
         {
             creditsMenu.SetActive(false);

@@ -3,6 +3,9 @@ using System.Collections;
 
 public class GemRotation : MonoBehaviour {
 
+    public AudioClip sfx;
+    public GameObject PrefabAudioSource;
+
     int[] gemCoordinate;
 	// Use this for initialization
 	void Start () {
@@ -27,6 +30,8 @@ public class GemRotation : MonoBehaviour {
             (playerCoordinate[1] == gemCoordinate[1]) &&
             (playerCoordinate[2] == gemCoordinate[2]))
         {
+            GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+            audio.GetComponent<AudioSource>().PlayOneShot(sfx);
             GameObject.Find("MainPlayer/PSGemCollect").GetComponent<ParticleSystem>().Play();
             GlobalVariable.CurrGemNumber += 1;
             GlobalVariable.nonActiveGem.Add(gameObject.name);

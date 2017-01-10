@@ -24,6 +24,14 @@ public class PlayerMovementControl : MonoBehaviour
     private bool readMap = false;
     private int indexMap = 1; // 1-6 
 
+    public AudioClip stepLandSFX;
+    public AudioClip stepWaterSFX;
+    public AudioClip stepSkySFX;
+    public AudioClip teleportSFX;
+    public GameObject PrefabAudioSource;
+    public float stepSFXDelay;
+    private float currentStepSFXDelay;
+
     public Animator mAnimator;
     private CharacterController controller;
     private int movingState = 0;    // 0 - iddle   || 1 - walking   || 2 - running
@@ -178,6 +186,8 @@ public class PlayerMovementControl : MonoBehaviour
 
     void Update()
     {
+        currentStepSFXDelay = currentStepSFXDelay - Time.deltaTime;
+
         if (!readMap)
         {
             if (MazeDatabase.GetMaze[1] != null)
@@ -229,7 +239,25 @@ public class PlayerMovementControl : MonoBehaviour
                     var z = Input.GetAxis("Vertical") * getSpeedFactor();
                     var x = enableSideStep ? Input.GetAxis("Horizontal") * getSideStepSpeedFactor() : 0;
                     //transform.Translate(x, 0, z);
-                    
+
+                    if (currentStepSFXDelay <= 0)
+                    {
+                        GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+                        if (GlobalVariable.CurrentLevel <= 1)
+                        {
+                            audio.GetComponent<AudioSource>().PlayOneShot(stepLandSFX);
+                        }
+                        if (GlobalVariable.CurrentLevel==2)
+                        {
+                            audio.GetComponent<AudioSource>().PlayOneShot(stepWaterSFX);
+                        }
+                        if (GlobalVariable.CurrentLevel==3)
+                        {
+                            audio.GetComponent<AudioSource>().PlayOneShot(stepSkySFX);
+                        }
+                        currentStepSFXDelay = stepSFXDelay;
+                    }
+
                     gameObject.GetComponent<CharacterController>().Move(transform.TransformDirection(new Vector3(x,0,z)));
                 }
             }
@@ -258,6 +286,8 @@ public class PlayerMovementControl : MonoBehaviour
             {
                 float fadeTime = GetComponent<Fading>().BeginFade(1);
                 float startTime = Time.realtimeSinceStartup;
+                GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+                audio.GetComponent<AudioSource>().PlayOneShot(teleportSFX);
                 while (true)
                 {
                     //print ("teleporting")
@@ -276,5 +306,10 @@ public class PlayerMovementControl : MonoBehaviour
         }
         // Update position to global variable
         GlobalVariable.PlayerPosition = this.transform.localPosition;
+
+        if (currentStepSFXDelay <= 0)
+        {
+            currentStepSFXDelay = stepSFXDelay;
+        }
     }
 }
