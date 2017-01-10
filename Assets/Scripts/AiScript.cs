@@ -238,7 +238,13 @@ public class AiScript : MonoBehaviour
             {
                 haveReadTheMap = true;
                 initMapNode();
-                placeAIInStartPosition();
+				if (GlobalVariable.CurrentLevel == 0) {
+					transform.position = new Vector3(8, 0, 1);
+				}
+				else
+				{
+					placeAIInStartPosition();
+				}
             }
         }
         else

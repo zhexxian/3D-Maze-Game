@@ -17,6 +17,7 @@ public class PlayerMovementControl : MonoBehaviour
     public GameObject infoOverlay;
     public GameObject infoText;
 	public GameObject tutorialCamera;
+	public GameObject timerAndHealthBar;
     private float speedFactor = 0.0f;
     private float MaxInfoShowTime = 2.0f;
     private float infoShowTime = 0.0f;
@@ -59,6 +60,7 @@ public class PlayerMovementControl : MonoBehaviour
         mAnimator   = GetComponent<Animator>();
 		if (GlobalVariable.tutorialCameraIsOn ()) {
 			tutorialCamera.SetActive (true);
+			timerAndHealthBar.SetActive (false);
 		}
     }
 

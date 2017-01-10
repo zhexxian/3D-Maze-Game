@@ -27,9 +27,14 @@ public class LoadGameScene : MonoBehaviour {
                 Destroy(gameObj);
             }
 			GameObject.FindWithTag("GameOver").SetActive(false);
-			if (!GlobalVariable.tutorialCameraIsOn ()) {
+
+			if (GlobalVariable.tutorialCameraIsOn ()) {
+				GameObject.FindWithTag ("TimerAndHealthBar").SetActive (false);
+			}
+			else {
 				GameObject.FindWithTag ("Tutorial").SetActive (false);
 			}
+
             SceneManager.UnloadScene("map-scene");
             //SceneManager.LoadScene("game-scene");
 		}

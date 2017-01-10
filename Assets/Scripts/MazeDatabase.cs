@@ -23,7 +23,7 @@ public class MazeDatabase
             string maze1 =
                 "######" +
                 "#G  F#" +
-                "#   T#" +
+                "#    #" +
                 "#    #" +
                 "#S  T#" +
                 "######";
