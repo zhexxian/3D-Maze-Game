@@ -11,9 +11,10 @@ public class LoadMapScene : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyUp("m") && !GlobalVariable.onPauseGame)
+		if(Input.GetKeyUp("m") && !GlobalVariable.onPauseGame && !GlobalVariable.onMapScene)
         {
-            GlobalVariable.onPauseGame = true;
+            //GlobalVariable.onPauseGame = true;
+            GlobalVariable.onMapScene = true;
             //SceneManager.LoadScene("map-scene");
             SceneManager.LoadScene("map-scene", LoadSceneMode.Additive);
             

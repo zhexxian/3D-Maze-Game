@@ -7,7 +7,7 @@ public class HealthBar : MonoBehaviour {
 	private float gameTimeInMinutes = 5;
 
 	void Update () {
-        if (GlobalVariable.onPauseGame) return;
+        if (GlobalVariable.onPauseGame || GlobalVariable.onMapScene) return;
         string text;
         if (gameObject.name == "Timer")
         {

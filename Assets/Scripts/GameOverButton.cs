@@ -23,5 +23,13 @@ public class GameOverButton : MonoBehaviour {
         SceneManager.LoadScene("game-scene");
     }
 
+    public void Pause_button_click() {
+        GlobalVariable.onPauseGame = true;
+    }
+
+    public void Resume_button_click()
+    {
+        GlobalVariable.onPauseGame = false;
+    }
 
 }

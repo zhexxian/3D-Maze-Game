@@ -234,7 +234,7 @@ public class AiScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GlobalVariable.onPauseGame || PlayerMovementControl.isPlayerFinish) return;
+        if (GlobalVariable.onPauseGame || PlayerMovementControl.isPlayerFinish || GlobalVariable.onMapScene) return;
         if (!haveReadTheMap)
         {   // Try to read the map
             if (MazeDatabase.GetMaze[1] != null)

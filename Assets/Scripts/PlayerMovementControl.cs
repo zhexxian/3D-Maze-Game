@@ -14,6 +14,7 @@ public class PlayerMovementControl : MonoBehaviour
     public bool enableSideStep = true;
     public bool controlByMouse = true;
     public GameObject congratOverlay;
+    public GameObject pauseOverlay;
     public GameObject gameOverOverlay;
     public GameObject infoOverlay;
     public GameObject infoText;
@@ -65,6 +66,8 @@ public class PlayerMovementControl : MonoBehaviour
         resetPlayer     = false;
         isPlayerFinish  = false;
         onCollision     = false;
+        GlobalVariable.onPauseGame = false;
+        GlobalVariable.CurrGemNumber = 0;
         controller  = GetComponent<CharacterController>();
         mAnimator   = GetComponent<Animator>();
 		if (GlobalVariable.tutorialCameraIsOn ()) {
@@ -166,6 +169,12 @@ public class PlayerMovementControl : MonoBehaviour
 	
 	}
 
+    void checkPause() {
+        if (GlobalVariable.onPauseGame != pauseOverlay.activeInHierarchy) {
+            pauseOverlay.SetActive(GlobalVariable.onPauseGame);
+        }
+    }
+
     void checkFinish() {
         int[] playerCoordinate = GlobalVariable.GetPlayerCoordinate();
         int[] finishCoordinate = GlobalVariable.ConvertPositionToCoordinate(GlobalVariable.GetFinishNodeCoordinate()[0], GlobalVariable.GetFinishNodeCoordinate()[1]);
@@ -221,7 +230,8 @@ public class PlayerMovementControl : MonoBehaviour
             cheat();
             checkGameOver();
             checkCongratOverlay();
-            if (GlobalVariable.onPauseGame || isPlayerFinish) return;
+            checkPause();
+            if (GlobalVariable.onPauseGame || isPlayerFinish || GlobalVariable.onMapScene) return;
             checkInfoOverlay();
             checkResetPlayer();
             checkFinish();

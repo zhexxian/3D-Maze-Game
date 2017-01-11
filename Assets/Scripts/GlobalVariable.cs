@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class GlobalVariable
 {
     private static bool _onPauseGame = false;
+    private static bool _onMapScene = false;
     private static bool _useMusic = true;
 	private static bool _turnOnTutorialCamera = false;
     private static Vector3 m_playerPosition;
@@ -74,6 +75,12 @@ public class GlobalVariable
     {
         get { return _onPauseGame; }
         set { _onPauseGame = value; }
+    }
+
+    public static bool onMapScene
+    {
+        get { return _onMapScene; }
+        set { _onMapScene = value; }
     }
 
     public static int getIndexMap()
