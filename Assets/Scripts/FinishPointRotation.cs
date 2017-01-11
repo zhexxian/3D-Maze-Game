@@ -35,11 +35,14 @@ public class FinishPointRotation : MonoBehaviour
             (playerCoordinate[2] == finishpointCoordinate[2]))
         {
             //finish code here
-            if (!audiohasplayed)
+            if (GlobalVariable.UseSFX)
             {
-                GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
-                audio.GetComponent<AudioSource>().PlayOneShot(sfx);
-                audiohasplayed = true;
+                if (!audiohasplayed)
+                {
+                    GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+                    audio.GetComponent<AudioSource>().PlayOneShot(sfx);
+                    audiohasplayed = true;
+                }
             }
             //Destroy(gameObject);
         }

@@ -7,8 +7,7 @@ using System.Collections.Generic;
 public class GlobalVariable
 {
     private static bool _onPauseGame = false;
-    private static bool _onMapScene = false;
-    private static bool _useMusic = true;
+    private static bool _onMapScene = false;   
 	private static bool _turnOnTutorialCamera = false;
     private static Vector3 m_playerPosition;
     private static int _maxGemNumber;
@@ -20,7 +19,8 @@ public class GlobalVariable
     private static string finishText;
     public static GameObject[] mGem;
     public static List<string> nonActiveGem = new List<string>();
-
+    private static bool m_useSFX = true;
+    private static bool m_useBGM = true;
 
     public static string getResetPlayerText() {
         return "You have been caught by the guardian! Some of your gems are lost";
@@ -65,10 +65,16 @@ public class GlobalVariable
         }
     }
 
-    public static bool useMusic
+    public static bool UseSFX
     {
-        get { return _useMusic; }
-        set { _useMusic = value; }
+        get { return m_useSFX; }
+        set { m_useSFX = value; }
+    }
+
+    public static bool UseBGM
+    {
+        get { return m_useBGM; }
+        set { m_useBGM = value; }
     }
 
     public static bool onPauseGame
@@ -144,7 +150,7 @@ public class GlobalVariable
     {
         //                       level   |1        |2          |3
         //                               +---------+-----------+----------
-        //array[0] = maze size           |8,       |11,        |15
+        //array[0] = maze size           |5,       |7,         |10
         //array[1] = maze complexity     |0.1,     |0.07,      |0.04
         //array[2] = total gem per side  |3,       |5,         |8
         //array[3] = time                |300,     |600,       |1200
@@ -156,9 +162,9 @@ public class GlobalVariable
         m_leveldata[2] = new string[6];
         m_leveldata[3] = new string[6];
 
-        m_leveldata[1][0] = "8";
-        m_leveldata[2][0] = "11";
-        m_leveldata[3][0] = "15";
+        m_leveldata[1][0] = "5";
+        m_leveldata[2][0] = "7";
+        m_leveldata[3][0] = "10";
 
         m_leveldata[1][1] = "0.1";
         m_leveldata[2][1] = "0.07";
@@ -172,9 +178,9 @@ public class GlobalVariable
         m_leveldata[2][3] = "600";
         m_leveldata[3][3] = "1200";
 
-        m_leveldata[1][4] = "5";
-        m_leveldata[2][4] = "6";
-        m_leveldata[3][4] = "8";
+        m_leveldata[1][4] = "2";
+        m_leveldata[2][4] = "3";
+        m_leveldata[3][4] = "4";
 
         m_leveldata[1][5] = "land";
         m_leveldata[2][5] = "water";

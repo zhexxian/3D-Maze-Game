@@ -210,27 +210,7 @@ public class CreateMaze : MonoBehaviour
                 }
             }
         }
-        
-        if (GlobalVariable.CurrentLevel<=1)
-        {
-            audio.GetComponent<AudioSource>().PlayOneShot(bgmLand);
-        }
-        if (GlobalVariable.CurrentLevel == 2)
-        {
-            audio.GetComponent<AudioSource>().PlayOneShot(bgmWater);
-        }
-        if (GlobalVariable.CurrentLevel == 3)
-        {
-            audio.GetComponent<AudioSource>().PlayOneShot(bgmSky);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-		try
-		{
-        if (!audio.GetComponent<AudioSource>().isPlaying)
+        if (GlobalVariable.UseBGM)
         {
             if (GlobalVariable.CurrentLevel <= 1)
             {
@@ -245,8 +225,34 @@ public class CreateMaze : MonoBehaviour
                 audio.GetComponent<AudioSource>().PlayOneShot(bgmSky);
             }
         }
-		}
-		catch {
-		}
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (GlobalVariable.UseBGM)
+        {
+            try
+            {
+                if (!audio.GetComponent<AudioSource>().isPlaying)
+                {
+                    if (GlobalVariable.CurrentLevel <= 1)
+                    {
+                        audio.GetComponent<AudioSource>().PlayOneShot(bgmLand);
+                    }
+                    if (GlobalVariable.CurrentLevel == 2)
+                    {
+                        audio.GetComponent<AudioSource>().PlayOneShot(bgmWater);
+                    }
+                    if (GlobalVariable.CurrentLevel == 3)
+                    {
+                        audio.GetComponent<AudioSource>().PlayOneShot(bgmSky);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
     }
 }

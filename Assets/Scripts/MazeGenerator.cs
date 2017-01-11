@@ -188,8 +188,8 @@ public class MazeGenerator
 
         maze = new string[mazeheight, mazewidth];
 
-        int homewidth = 9;
-        int homeheight = 5;
+        int homewidth = 3;
+        int homeheight = 3;
 
         #region maze initialization
         //initialize maze

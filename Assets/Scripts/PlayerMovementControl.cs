@@ -269,24 +269,26 @@ public class PlayerMovementControl : MonoBehaviour
                     var x = enableSideStep ? Input.GetAxis("Horizontal") * getSideStepSpeedFactor() : 0;
                     //transform.Translate(x, 0, z);
 
-                    if (currentStepSFXDelay <= 0)
+                    if (GlobalVariable.UseSFX)
                     {
-                        GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
-                        if (GlobalVariable.CurrentLevel <= 1)
+                        if (currentStepSFXDelay <= 0)
                         {
-                            audio.GetComponent<AudioSource>().PlayOneShot(stepLandSFX);
+                            GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+                            if (GlobalVariable.CurrentLevel <= 1)
+                            {
+                                audio.GetComponent<AudioSource>().PlayOneShot(stepLandSFX);
+                            }
+                            if (GlobalVariable.CurrentLevel == 2)
+                            {
+                                audio.GetComponent<AudioSource>().PlayOneShot(stepWaterSFX);
+                            }
+                            if (GlobalVariable.CurrentLevel == 3)
+                            {
+                                audio.GetComponent<AudioSource>().PlayOneShot(stepSkySFX);
+                            }
+                            currentStepSFXDelay = stepSFXDelay;
                         }
-                        if (GlobalVariable.CurrentLevel==2)
-                        {
-                            audio.GetComponent<AudioSource>().PlayOneShot(stepWaterSFX);
-                        }
-                        if (GlobalVariable.CurrentLevel==3)
-                        {
-                            audio.GetComponent<AudioSource>().PlayOneShot(stepSkySFX);
-                        }
-                        currentStepSFXDelay = stepSFXDelay;
                     }
-
                     gameObject.GetComponent<CharacterController>().Move(transform.TransformDirection(new Vector3(x,0,z)));
                 }
             }
@@ -315,8 +317,11 @@ public class PlayerMovementControl : MonoBehaviour
             {
                 float fadeTime = GetComponent<Fading>().BeginFade(1);
                 float startTime = Time.realtimeSinceStartup;
-                GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
-                audio.GetComponent<AudioSource>().PlayOneShot(teleportSFX);
+                if (GlobalVariable.UseSFX)
+                {
+                    GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+                    audio.GetComponent<AudioSource>().PlayOneShot(teleportSFX);
+                }
                 while (true)
                 {
                     //print ("teleporting")

@@ -263,8 +263,11 @@ public class AiScript : MonoBehaviour
             
             if (checkCatchPlayer())
             {
-                GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
-                audio.GetComponent<AudioSource>().PlayOneShot(monsterHitSFX);
+                if (GlobalVariable.UseSFX)
+                {
+                    GameObject audio = (GameObject)Instantiate(PrefabAudioSource);
+                    audio.GetComponent<AudioSource>().PlayOneShot(monsterHitSFX);
+                }
                 startIdle();
                 resetPlayer();
             }

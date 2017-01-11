@@ -75,8 +75,9 @@ public class MainButton : MonoBehaviour
     public void Music_button_click() {
         GameObject.Find("AudioSource").GetComponent<MenuSceneAudioSource>().PlayClick();
         Image btn_music = GameObject.Find("btn_music").GetComponent<Image>();
-        GlobalVariable.useMusic = !GlobalVariable.useMusic;
-        if (GlobalVariable.useMusic)
+        GlobalVariable.UseBGM = !GlobalVariable.UseBGM;
+        GlobalVariable.UseSFX = GlobalVariable.UseBGM;
+        if (GlobalVariable.UseBGM)
         {
             btn_music.sprite = musicOn;
         }
