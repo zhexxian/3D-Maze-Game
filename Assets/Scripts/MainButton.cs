@@ -16,8 +16,14 @@ public class MainButton : MonoBehaviour
     private GameObject playMenu;
     private GameObject optionsMenu;
     private GameObject creditsMenu;
+    public AudioClip bgmClip;
+    public GameObject PrefabAudioSource;
+    private GameObject audio;
 
     void Start() {
+        audio = (GameObject)Instantiate(PrefabAudioSource);
+        audio.GetComponent<AudioSource>().PlayOneShot(bgmClip);
+
         if (GlobalVariable.UnlockedLevel == -1) {
             DataControl.Load();
         }
@@ -80,9 +86,13 @@ public class MainButton : MonoBehaviour
         if (GlobalVariable.UseBGM)
         {
             btn_music.sprite = musicOn;
+            audio.GetComponent<AudioSource>().volume = 1;
+            GameObject.Find("AudioSource").GetComponent<AudioSource>().volume = 1;
         }
         else {
             btn_music.sprite = musicOff;
+            audio.GetComponent<AudioSource>().volume = 0;
+            GameObject.Find("AudioSource").GetComponent<AudioSource>().volume = 0;
         }
     }
 

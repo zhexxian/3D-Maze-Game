@@ -102,6 +102,7 @@ public class CreateMazeMap : MonoBehaviour
 			}
 		}
         playerCoordinates = GlobalVariable.GetPlayerCoordinate();
+        print(playerCoordinates[0].ToString()+" "+ playerCoordinates[1].ToString()+" "+ playerCoordinates[2].ToString());
         int aa = playerCoordinates[0];
         int xx = playerCoordinates[1];
         int yy = playerCoordinates[2];

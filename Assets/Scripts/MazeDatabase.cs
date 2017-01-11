@@ -90,35 +90,35 @@ public class MazeDatabase
             {
                 MazeDatabase.SetTeleportPoint(4, n, MazeDatabase.GetMaze[4].GetLength(0) - 2, 1, n, 1);
             }
-            //if maze1.south = maze5.south = MAZEPATH
-            if ((MazeDatabase.GetMaze[1][1, n] == " ") && (MazeDatabase.GetMaze[5][1, n] == " "))
+            //if maze1.south = maze5.north = MAZEPATH
+            if ((MazeDatabase.GetMaze[1][1, n] == " ") && (MazeDatabase.GetMaze[5][MazeDatabase.GetMaze[1].GetLength(0) - 2, n] == " "))
             {
-                MazeDatabase.SetTeleportPoint(1, 1, n, 5, 1, n);
+                MazeDatabase.SetTeleportPoint(1, 1, n, 5, MazeDatabase.GetMaze[1].GetLength(0) - 2, n);
             }
-            //if maze4.south = reverse maze5.west = MAZEPATH
-            if ((MazeDatabase.GetMaze[4][1, n] == " ") && (MazeDatabase.GetMaze[5][MazeDatabase.GetMaze[6].GetLength(0) - 1 - n, 1] == " "))
+            //if maze4.south =  maze5.west = MAZEPATH
+            if ((MazeDatabase.GetMaze[4][1, n] == " ") && (MazeDatabase.GetMaze[5][ n, 1] == " "))
             {
-                MazeDatabase.SetTeleportPoint(4, 1, n, 5, MazeDatabase.GetMaze[6].GetLength(0) - 1 - n, 1);
+                MazeDatabase.SetTeleportPoint(4, 1, n, 5,  n, 1);
             }
-            //if maze3.south = reverse maze5.north = MAZEPATH
-            if ((MazeDatabase.GetMaze[3][1, n] == " ") && (MazeDatabase.GetMaze[5][MazeDatabase.GetMaze[5].GetLength(0) - 2, MazeDatabase.GetMaze[6].GetLength(0) - 1 - n] == " "))
+            //if maze3.south = reverse maze5.south = MAZEPATH
+            if ((MazeDatabase.GetMaze[3][1, n] == " ") && (MazeDatabase.GetMaze[5][1, MazeDatabase.GetMaze[6].GetLength(1) - 1 - n] == " "))
             {
-                MazeDatabase.SetTeleportPoint(3, 1, n, 5, MazeDatabase.GetMaze[5].GetLength(0) - 2, MazeDatabase.GetMaze[6].GetLength(0) - 1 - n);
+                MazeDatabase.SetTeleportPoint(3, 1, n, 5, 1, MazeDatabase.GetMaze[6].GetLength(1) - 1 - n);
             }
-            //if maze2.south = maze5.east = MAZEPATH
-            if ((MazeDatabase.GetMaze[2][1, n] == " ") && (MazeDatabase.GetMaze[5][n, MazeDatabase.GetMaze[5].GetLength(1) - 2] == " "))
+            //if maze2.south = reverse maze5.east = MAZEPATH
+            if ((MazeDatabase.GetMaze[2][1, n] == " ") && (MazeDatabase.GetMaze[5][MazeDatabase.GetMaze[6].GetLength(1) - 1 - n, MazeDatabase.GetMaze[5].GetLength(1) - 2] == " "))
             {
-                MazeDatabase.SetTeleportPoint(2, 1, n, 5, n, MazeDatabase.GetMaze[5].GetLength(1) - 2);
+                MazeDatabase.SetTeleportPoint(2, 1, n, 5, MazeDatabase.GetMaze[6].GetLength(1) - 1 - n, MazeDatabase.GetMaze[5].GetLength(1) - 2);
             }
             //if maze1.north = maze6.south = MAZEPATH
             if ((MazeDatabase.GetMaze[1][MazeDatabase.GetMaze[1].GetLength(0) - 2, n] == " ") && (MazeDatabase.GetMaze[6][1, n] == " "))
             {
                 MazeDatabase.SetTeleportPoint(1, MazeDatabase.GetMaze[1].GetLength(0) - 2, n, 6, 1, n);
             }
-            //if maze4.north = maze6.west = MAZEPATH
-            if ((MazeDatabase.GetMaze[4][MazeDatabase.GetMaze[1].GetLength(0) - 2, n] == " ") && (MazeDatabase.GetMaze[6][n, 1] == " "))
+            //if maze4.north = reverse maze6.west = MAZEPATH
+            if ((MazeDatabase.GetMaze[4][MazeDatabase.GetMaze[1].GetLength(0) - 2, n] == " ") && (MazeDatabase.GetMaze[6][MazeDatabase.GetMaze[6].GetLength(1) - 1 - n, 1] == " "))
             {
-                MazeDatabase.SetTeleportPoint(4, MazeDatabase.GetMaze[1].GetLength(0) - 2, n, 6, n, 1);
+                MazeDatabase.SetTeleportPoint(4, MazeDatabase.GetMaze[1].GetLength(0) - 2, n, 6, MazeDatabase.GetMaze[6].GetLength(1) - 1 - n, 1);
             }
             //if maze3.north = reverse maze6.north = MAZEPATH
             if ((MazeDatabase.GetMaze[3][MazeDatabase.GetMaze[1].GetLength(0) - 2, n] == " ") && (MazeDatabase.GetMaze[6][MazeDatabase.GetMaze[6].GetLength(0) - 2, MazeDatabase.GetMaze[6].GetLength(1) - 1 - n] == " "))
