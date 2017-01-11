@@ -22,11 +22,15 @@ public class LoadGameScene : MonoBehaviour {
             {
                 gameObj.SetActive(true);
             }
+
+			GameObject.FindWithTag("GameOver").SetActive(false);
+
+
             foreach (GameObject gameObj in mapSceneObjects)
             {  
                 Destroy(gameObj);
             }
-			GameObject.FindWithTag("GameOver").SetActive(false);
+
 
 			if (GlobalVariable.tutorialCameraIsOn ()) {
 				GameObject.FindWithTag ("TimerAndHealthBar").SetActive (false);

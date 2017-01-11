@@ -228,6 +228,8 @@ public class CreateMaze : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		try
+		{
         if (!audio.GetComponent<AudioSource>().isPlaying)
         {
             if (GlobalVariable.CurrentLevel <= 1)
@@ -243,5 +245,8 @@ public class CreateMaze : MonoBehaviour
                 audio.GetComponent<AudioSource>().PlayOneShot(bgmSky);
             }
         }
+		}
+		catch {
+		}
     }
 }
