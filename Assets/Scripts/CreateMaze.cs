@@ -17,6 +17,9 @@ public class CreateMaze : MonoBehaviour
     public GameObject PrefabFloorLand;
     public GameObject PrefabFloorWater;
     public GameObject PrefabFloorSky;
+	public Material FloorLand;
+	public Material FloorWater;
+	public Material FloorSky;
     public GameObject PrefabFinishPointLand;
     public GameObject PrefabFinishPointWater;
     public GameObject PrefabFinishPointSky;
@@ -30,6 +33,9 @@ public class CreateMaze : MonoBehaviour
     public AudioClip bgmSky;
     public GameObject PrefabAudioSource;
     public float yWallActive = 0;
+	public Material SkyboxLand;
+	public Material SkyboxWater;
+	public Material SkyboxSky; 	
 
     public float yWallLand;
     public float yWallWater;
@@ -40,6 +46,18 @@ public class CreateMaze : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+		if (GlobalVariable.CurrentLevel<=1)
+		{
+			RenderSettings.skybox = SkyboxLand;
+		}
+		if (GlobalVariable.CurrentLevel==2)
+		{
+			RenderSettings.skybox = SkyboxWater;
+		}
+		if (GlobalVariable.CurrentLevel == 3)
+		{
+			RenderSettings.skybox = SkyboxSky;
+		}
         audio = (GameObject)Instantiate(PrefabAudioSource);
         //initialize map
         int gemNumber = 0;
@@ -99,13 +117,23 @@ public class CreateMaze : MonoBehaviour
         for (int a = 1; a <= 6; a++)
         {
             plane[a] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            plane[a].transform.position = new Vector3(a * MazeDatabase.GetMaze[a].GetLength(0) + 10, 0, 10);
+			plane[a].transform.position = new Vector3((float)(a) * (float)(MazeDatabase.GetMaze[a].GetLength(0)) + (float)(MazeDatabase.GetMaze[a].GetLength(0))/2f, 0, (float)(MazeDatabase.GetMaze[a].GetLength(0))/2f);
             //maze[a].GetLength(0) --> horizontal; (1) --> vertical
             plane[a].transform.localScale = new Vector3(MazeDatabase.GetMaze[a].GetLength(0), 0.01f, MazeDatabase.GetMaze[a].GetLength(1));
 
-            Material[] groundMaterialArr = new Material[1];
-            groundMaterialArr[0] = groundMaterial;
-            plane[a].GetComponent<MeshRenderer>().materials = groundMaterialArr;
+
+            Material[] materialArr = new Material[1];
+			if (GlobalVariable.CurrentLevel <= 1) {
+				
+				materialArr [0] = FloorLand;
+			}
+			if (GlobalVariable.CurrentLevel == 2) {
+				materialArr [0] = FloorWater;
+			}
+			if (GlobalVariable.CurrentLevel == 3) {
+				materialArr [0] = FloorSky;
+			}
+			plane[a].GetComponent<MeshRenderer>().materials = materialArr;
             plane[a].GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(40, 40);
 
             for (int y = 0; y < MazeDatabase.GetMaze[a].GetLength(0); y++)
@@ -143,8 +171,10 @@ public class CreateMaze : MonoBehaviour
                     }
                     //if (MazeDatabase.GetMaze[a][y,x] == MazeGenerator.MAZEPATH)
                     //{
+					/*
                     GameObject gofloor = (GameObject)Instantiate(PrefabFloorDefault);
                     gofloor.transform.localPosition = new Vector3(x + a * MazeDatabase.GetMaze[a].GetLength(0), 0, y);
+                    */
                     //}
                 }
             }
