@@ -13,7 +13,8 @@ public class PlayerMovementControl : MonoBehaviour
     public float sideStepSpeed = 0.1f;
     public bool enableSideStep = true;
     public bool controlByMouse = true;
-	public GameObject gameOverOverlay;
+    public GameObject congratOverlay;
+    public GameObject gameOverOverlay;
     public GameObject infoOverlay;
     public GameObject infoText;
 	public GameObject tutorialCamera;
@@ -118,6 +119,25 @@ public class PlayerMovementControl : MonoBehaviour
                 infoOverlay.SetActive(false);
         }
     }
+
+    void checkCongratOverlay()
+    {
+        if (infoOverlay.activeInHierarchy && isPlayerFinish)
+        {
+            infoShowTime -= Time.deltaTime;
+            if (infoShowTime <= 0) {
+                infoOverlay.SetActive(false);
+                if (GlobalVariable.CurrentLevel == 3)
+                {
+                    SceneManager.LoadScene("menu-scene");
+                }
+                else {
+                    congratOverlay.SetActive(true);
+                }
+            }
+                
+        }
+    }
     void checkResetPlayer() {
         if (resetPlayer)
         {
@@ -158,16 +178,14 @@ public class PlayerMovementControl : MonoBehaviour
             infoOverlay.SetActive(true);
             infoText.GetComponent<UnityEngine.UI.Text>().text = GlobalVariable.getFinishPlayerText();
             isPlayerFinish = true;
+            infoShowTime = MaxInfoShowTime;
             Debug.Log(GlobalVariable.UnlockedLevel);
             if (GlobalVariable.UnlockedLevel == 1 && GlobalVariable.CurrentLevel == 1){
                 GlobalVariable.UnlockedLevel = 2;
-                Debug.Log("finish 1");
             }
             else if (GlobalVariable.UnlockedLevel == 2 && GlobalVariable.CurrentLevel == 2) {
                 GlobalVariable.UnlockedLevel = 3;
-                Debug.Log("finish 2");
             }
-            Debug.Log(GlobalVariable.UnlockedLevel);
         }
     }
 
@@ -202,6 +220,7 @@ public class PlayerMovementControl : MonoBehaviour
         {
             cheat();
             checkGameOver();
+            checkCongratOverlay();
             if (GlobalVariable.onPauseGame || isPlayerFinish) return;
             checkInfoOverlay();
             checkResetPlayer();

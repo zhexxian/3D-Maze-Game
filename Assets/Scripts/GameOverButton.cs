@@ -14,5 +14,14 @@ public class GameOverButton : MonoBehaviour {
 		SceneManager.LoadScene("menu-scene");
 	}
 
+    public void NextWorld_button_click()
+    {
+        GlobalVariable.CurrentLevel += 1;
+        Debug.Log(GlobalVariable.CurrentLevel);
+        if (GlobalVariable.CurrentLevel > 3) GlobalVariable.CurrentLevel = 3;
+        MazeDatabase.GenerateMaze(GlobalVariable.CurrentLevel);
+        SceneManager.LoadScene("game-scene");
+    }
+
 
 }

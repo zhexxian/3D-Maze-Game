@@ -75,6 +75,8 @@
     <Compile Include="Assets\Scripts\Fading.cs" />
     <Compile Include="Assets\Scripts\FinishPointRotation.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />
+    <Compile Include="Assets\Scripts\GameOverButton.cs" />
+    <Compile Include="Assets\Scripts\GameSceneAudioSource.cs" />
     <Compile Include="Assets\Scripts\GemRotation.cs" />
     <Compile Include="Assets\Scripts\GlobalVariable.cs" />
     <Compile Include="Assets\Scripts\HealthBar.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Assets\Scripts\MapNode.cs" />
     <Compile Include="Assets\Scripts\MazeDatabase.cs" />
     <Compile Include="Assets\Scripts\MazeGenerator.cs" />
+    <Compile Include="Assets\Scripts\MenuSceneAudioSource.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementControl.cs" />
     <Compile Include="Assets\Scripts\scaleMesh.cs" />
   </ItemGroup>
