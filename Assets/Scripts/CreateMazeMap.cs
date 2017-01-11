@@ -19,6 +19,7 @@ public class CreateMazeMap : MonoBehaviour
         GameObject[] gameSceneObjects = SceneManager.GetSceneByName("game-scene").GetRootGameObjects();
         foreach (GameObject gameObj in gameSceneObjects)
         {
+            if(!gameObj.name.StartsWith("gem_"))
             gameObj.SetActive(false);
         }
     }

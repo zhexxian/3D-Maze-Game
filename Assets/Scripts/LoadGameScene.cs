@@ -20,11 +20,9 @@ public class LoadGameScene : MonoBehaviour {
             Destroy(mapCube);
             foreach (GameObject gameObj in gameSceneObjects)
             {
+                if(gameObj.name != "GameOver" && gameObj.name != "Congrat" && !gameObj.name.StartsWith("gem_") )
                 gameObj.SetActive(true);
             }
-
-			GameObject.FindWithTag("GameOver").SetActive(false);
-
 
             foreach (GameObject gameObj in mapSceneObjects)
             {  
@@ -40,7 +38,6 @@ public class LoadGameScene : MonoBehaviour {
 			}
 
             SceneManager.UnloadScene("map-scene");
-            //SceneManager.LoadScene("game-scene");
 		}
 	}
 }
