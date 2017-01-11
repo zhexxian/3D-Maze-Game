@@ -1,19 +1,21 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MainButton.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameOverButton.cs">
     <Files>
-      <File FileName="Assets\Scripts\CreateMazeMap.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CreateMazeMap.cs" Line="88" Column="56" />
       <File FileName="Assets\Scripts\CreateMaze.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\MazeGenerator.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\LoadMapScene.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Fading.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerMovementControl.cs" Line="63" Column="40" />
+      <File FileName="Assets\Scripts\PlayerMovementControl.cs" Line="88" Column="18" />
       <File FileName="Assets\Scripts\HealthBar.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MazeDatabase.cs" Line="24" Column="27" />
-      <File FileName="Assets\Scripts\MainButton.cs" Line="54" Column="34" />
-      <File FileName="Assets\Scripts\GlobalVariable.cs" Line="121" Column="35" />
-      <File FileName="Assets\Scripts\LoadGameScene.cs" Line="41" Column="3" />
+      <File FileName="Assets\Scripts\MazeDatabase.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MainButton.cs" Line="3" Column="24" />
+      <File FileName="Assets\Scripts\GlobalVariable.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LoadGameScene.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\AiScript.cs" Line="242" Column="48" />
+      <File FileName="Assets\Scripts\IntroductionStory.cs" Line="33" Column="9" />
+      <File FileName="Assets\Scripts\GameOverButton.cs" Line="3" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
