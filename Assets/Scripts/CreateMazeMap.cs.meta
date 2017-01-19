@@ -1,10 +1,14 @@
 fileFormatVersion: 2
 guid: 692bc1dccb94ce5408f33497d4b56abe
-timeCreated: 1479787638
+timeCreated: 1482813926
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - groundMaterial: {fileID: 2100000, guid: a015fefbaab68144a8d364e4b2d0a1e9, type: 2}
+  - wallMaterial: {fileID: 2100000, guid: 5c21263af7439b3428282a0fc23ca51d, type: 2}
+  - playerMaterial: {instanceID: 0}
+  - goalMaterial: {fileID: 2100000, guid: 80ba799776ad894419ec3b538ec68577, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
